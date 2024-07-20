@@ -54,6 +54,6 @@ void main() {
   num2 = null;
   print(num2);
 
-  num2 ??= 3.0;
+  num2 ??= 3.0; // null 일때 오른쪽값으로 함
   print(num2);
 }
