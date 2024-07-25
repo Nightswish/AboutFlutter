@@ -3,7 +3,7 @@ void main() {
   final Set<String> names = {
     'Flutter',
     'Black Pink',
-  }
+  };
 
   print(names);
 
