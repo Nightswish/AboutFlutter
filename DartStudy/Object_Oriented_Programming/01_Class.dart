@@ -1,9 +1,22 @@
 void main() {
   // 클래스정의 > 설계, 클래스정의한것으로 결과물을 실제 만드는것 > 인스턴스
 
-  Idol blackPink = Idol(); // new 생략가능
+  Idol blackPink = Idol( // new 생략가능
+    'BlackPink',
+    ['지수', '제니', '리사', '로제가'],
+  ); 
 
+  print(blackPink.name);
   blackPink.sayHello();
+  blackPink.introduce();
+
+  Idol bts = Idol(
+    'BTS',
+    ['RM', '진', '슈가', '제이홉', '지민', '뷔', '정국']
+  );
+
+  bts.sayHello();
+  bts.introduce();
 }
 
 // Class
@@ -14,14 +27,18 @@ void main() {
 
 // constructor (생성자)
 class Idol {
-  String name = 'BlackPink';
-  List<String> members = ['지수', '제니', '리사', '로제'];
+  String name;
+  List<String> members;
+
+  Idol(String name, List<String> members)
+  : this.name = name,
+    this.members = members;
 
   void sayHello(){
-    print('안녕하세요 BlackPink입니다.');
+    print('안녕하세요 ${this.name}입니다.');
   }
 
   void introduce(){
-    print('저희 멤버는 지수, 제니, 리사, 로제가 있습니다.');
+    print('저희 멤버는 ${this.members}가 있습니다.');
   }
 }
