@@ -30,9 +30,7 @@ class Idol {
   String name;
   List<String> members;
 
-  Idol(String name, List<String> members)
-  : this.name = name,
-    this.members = members;
+  Idol(this.name = name, this.members = members)
 
   void sayHello(){
     print('안녕하세요 ${this.name}입니다.');
