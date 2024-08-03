@@ -17,6 +17,15 @@ void main() {
 
   bts.sayHello();
   bts.introduce();
+
+  Idol blackPink1 = Idol.fromList(
+    [
+      ['지수', '제니', '리사', '로제가'],
+      'BlackPink',
+    ]
+  );
+  blackPink1.sayHello();
+  blackPink1.introduce();
 }
 
 // Class
@@ -31,6 +40,11 @@ class Idol {
   List<String> members;
 
   Idol(this.name, this.members);
+
+  //name constructor
+  Idol.fromList(List values)
+    : this.members = values[0],
+      this.name    = values[1];
 
   void sayHello(){
     print('안녕하세요 ${this.name}입니다.');
