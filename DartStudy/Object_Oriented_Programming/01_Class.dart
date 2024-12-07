@@ -57,7 +57,7 @@ void main() {
   }
 
   // getter
-  String get firstMember{
+  String get _firstMember{ // _하면 private .. 다른곳에서 호출안됨
   return this.members[0];
   }
 
