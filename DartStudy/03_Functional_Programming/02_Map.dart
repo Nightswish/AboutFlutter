@@ -16,5 +16,10 @@ void main() {
   print(newBlackPink == blackPink);
   print(newBlackPink == newBlackPink2);
 
-  
+  //  바꿀 형태: [1.jpg, 3.jpg, 5.jpg, 7.jpg, 9.jpg]
+  String number = '13579';
+
+  final parsed = number.split('').map((x) => '$x.jpg').toList();
+
+  print(parsed);
 }
