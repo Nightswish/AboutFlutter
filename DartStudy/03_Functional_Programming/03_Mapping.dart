@@ -14,4 +14,10 @@ void main(){
 
   print(harryPotter);
   print(result);
+
+  final keys = harryPotter.keys.map((x) => 'HPC $x').toList();
+  final values = harryPotter.values.map((x) => '해리포터 $x').toList();
+
+  print(keys);
+  print(values);
 }
