@@ -1,0 +1,80 @@
+name: Flutter CI
+
+# 트리거 조건
+on:
+  push:
+    paths:
+      - 'AboutFlutter/portfolio/**'  # 특정 프로젝트 폴더에서 변경 시에만 트리거
+    branches: [ Development ]
+  pull_request:
+    paths:
+      - 'AboutFlutter/portfolio/**'
+    branches: [ Development ]
+
+jobs:
+  # CI
+  build:
+    name: Build and Test Flutter App
+    runs-on: ubuntu-latest
+    
+    # 작업 수행 디렉토리 지정
+    defaults:
+      run:
+        working-directory: AboutFlutter/portfolio
+
+    steps:
+    # 코드 체크아웃
+    - uses: actions/checkout@v3
+    
+    # Flutter 환경 설정
+    - name: Flutter 환경 설정
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.35.2'
+        channel: 'stable'
+    
+    # 의존성 설치
+    - name: 의존성 다운로드
+      run: flutter pub get
+    
+    # 코드 정적 분석
+    - name: 코드 분석
+      run: dart analyze lib
+    
+    # 포맷팅 검사
+    - name: 코드 포맷팅 검사
+      run: dart format --set-exit-if-changed lib
+    
+    # 테스트 실행
+    - name: 단위 테스트 실행
+      run: flutter test
+    
+    # 빌드 (웹)
+    - name: 웹 빌드
+      run: flutter build web --base-href="/portfolio/"
+    
+    # 아티팩트 업로드 (선택적)
+    - uses: actions/upload-artifact@v3
+      with:
+        name: web-build
+        path: AboutFlutter/portfolio/build/web
+
+  # CD - Github Pages 
+  deploy:
+    needs: build  # build 작업 성공 후 실행
+    runs-on: ubuntu-latest
+    
+    steps:
+    # 빌드된 아티팩트 다운로드
+    - uses: actions/download-artifact@v3
+      with:
+        name: web-build
+        path: ./web-build  # 명시적 경로 지정
+    
+    # GitHub Pages 배포
+    - name: GitHub Pages 배포
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./web-build  # 다운로드한 아티팩트 경로 ./build/web에서 변경
+        publish_branch: gh-pages
