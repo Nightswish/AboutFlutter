@@ -1,3 +1,4 @@
+import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -77,6 +78,10 @@ class PortfolioApp extends StatelessWidget {
           path: '/terms', // '/terms' 경로로 가면
           builder: (context, state) => const TermsPage(), // TermsPage를 보여줌
         ),
+        GoRoute(
+          path: '/render',
+          builder: (context, state) => const Render(), 
+        ),
       ],
       // 이 외에도 에러 페이지, 리다이렉트 등 다양한 GoRouter 설정이 가능
     );
@@ -121,6 +126,10 @@ class HomePage extends StatelessWidget {
               onPressed: () => context.go('/terms'), // 버튼을 누르면 '/terms' 경로로 이동
               child: const Text('Terms of Service'),
             ),
+            ElevatedButton(
+              onPressed: () => context.go('/render'), 
+              child: const Text('Try Renderer Demo'),
+            ),
           ],
         ),
       ),
@@ -146,6 +155,140 @@ class TermsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(child: Text('Terms of Service Page')),
+    );
+  }
+}
+
+class Render extends StatefulWidget {
+  const Render({super.key});
+
+  @override
+  State<Render> createState() => _Render();
+}
+
+class _Render extends State<Render>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _fadeIn;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller =
+        AnimationController(vsync: this, duration: const Duration(seconds: 2));
+
+    _fadeIn = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
+
+    _controller.forward(); // 애니메이션 시작
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose(); // 컨트롤러는 반드시 dispose 해주어야 해! 메모리 누수 방지!
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size; // 현재 화면 크기 가져오기
+
+    return Scaffold(
+      body: Stack( // 여러 위젯을 겹쳐서 배치할 때 사용하는 위젯
+        children: [
+          // 배경: 그라데이션이 적용된 Container
+          Container(
+            width: size.width,
+            height: size.height,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient( // 선형 그라데이션
+                colors: [Colors.blueAccent, Colors.purpleAccent], // 색상 지정
+                begin: Alignment.topLeft, // 그라데이션 시작점 (좌측 상단)
+                end: Alignment.bottomRight, // 그라데이션 끝점 (우측 하단)
+              ),
+            ),
+          ),
+
+          // 중앙 히어로 섹션 (페이드인 애니메이션 적용)
+          Center(
+            child: FadeTransition( // 불투명도를 애니메이션으로 변경하는 위젯
+              opacity: _fadeIn, // 위에서 정의한 페이드인 애니메이션 사용
+              child: Column( // 세로 방향으로 위젯들을 배치
+                mainAxisSize: MainAxisSize.min, // 컬럼의 크기를 자식 위젯들에 맞게 최소화
+                children: [
+                  const HeroTitle(), // 히어로 섹션 제목 위젯
+                  const SizedBox(height: 20), // 제목과 버튼 사이 간격
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom( // 버튼 스타일 정의
+                      padding: const EdgeInsets.symmetric( // 내부 패딩
+                          horizontal: 32, vertical: 16),
+                      shape: RoundedRectangleBorder( // 버튼 모서리 둥글게
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    onPressed: () {
+                      // 이 버튼을 누르면 HomePage로 이동하도록 GoRouter 사용
+                      context.go('/'); // HomePage 경로로 이동!
+                    },
+                    child: const Text("Back to Home"), // 버튼 텍스트
+                  ),
+                  const SizedBox(height: 20),
+
+                  // HTML 렌더러 테스트 버튼
+                  ElevatedButton(
+                    onPressed: () {
+                      const url = "https://username.github.io/html/";
+                      html.window.open(url, "_blank");
+                    },
+                    child: const Text("Try HTML Renderer"),
+                  ),
+                  const SizedBox(height: 10),
+
+                  // CanvasKit 렌더러 테스트 버튼
+                  ElevatedButton(
+                    onPressed: () {
+                      const url = "https://username.github.io/canvaskit/";
+                      html.window.open(url, "_blank");
+                    },
+                    child: const Text("Try CanvasKit Renderer"),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// 히어로 섹션의 제목 위젯
+class HeroTitle extends StatelessWidget {
+  const HeroTitle({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Hero( // 위젯 간의 시각적 연결 애니메이션 (다른 화면으로 전환될 때 유용)
+      tag: "Rendering Page", // 고유 태그 (같은 태그를 가진 다른 화면의 위젯과 연결됨)
+      child: Material( // 텍스트 위젯에 Material 디자인 효과 (그림자 등)를 적용하기 위해 감싸줌
+        color: Colors.transparent, // Material 위젯의 배경을 투명하게 설정
+        child: Text(
+          "Check Rendering",
+          textAlign: TextAlign.center,
+          style: GoogleFonts.poppins( // Google Fonts의 Poppins 글꼴 사용 (개별 위젯에서 폰트 오버라이드)
+            fontSize: 48,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+            shadows: [ // 텍스트에 그림자 효과 추가
+              Shadow(
+                blurRadius: 8,
+                color: Colors.black.withOpacity(0.5), // 검은색에 50% 불투명도
+                offset: const Offset(2, 2), // 그림자 위치 (x, y)
+              )
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

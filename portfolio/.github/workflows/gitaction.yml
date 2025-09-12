@@ -49,15 +49,31 @@ jobs:
     - name: 단위 테스트 실행
       run: flutter test
     
-    # 빌드 (웹)
-    - name: 웹 빌드
-      run: flutter build web --web-renderer auto --release --base-href "/"
+    # 웹 빌드 - HTML
+    - name: 웹 빌드 - HTML
+      run: flutter build web --web-renderer html --release --base-href "/html/"
+    - name: Move HTML build
+      run: mv build/web ../build-html
+
+    # 웹 빌드 - CanvasKit
+    - name: Build Web - CanvasKit Renderer
+      run: flutter build web --web-renderer canvaskit --release --base-href "/canvaskit/"
+    - name: Move CanvasKit build
+      run: mv build/web ../build-canvaskit
     
+    # 빌드 결과 병합
+    - name: Merge builds
+      run: |
+        mkdir -p ../web-dist/html
+        mkdir -p ../web-dist/canvaskit
+        mv ../build-html/* ../web-dist/html/
+        mv ../build-canvaskit/* ../web-dist/canvaskit/
+
     # 아티팩트 업로드 (선택적)
     - uses: actions/upload-artifact@v3
       with:
-        name: web-build
-        path: AboutFlutter/portfolio/build/web
+        name: web-dist
+        path: web-dist
 
   # CD - Github Pages 
   deploy:
@@ -68,12 +84,12 @@ jobs:
     # 빌드된 아티팩트 다운로드
     - uses: actions/download-artifact@v3
       with:
-        name: web-build
-        path: ./web-build  # 명시적 경로 지정
+        name: web-dist
+        path: ./web-dist 
     
     # GitHub Pages 배포
     - name: GitHub Pages 배포
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./web-build  # 다운로드한 아티팩트 경로 ./build/web에서 변경
+        publish_dir: ./web-dist  # 다운로드한 아티팩트 경로 ./build/web에서 변경
