@@ -51,7 +51,7 @@ jobs:
     
     # 빌드 (웹)
     - name: 웹 빌드
-      run: flutter build web --base-href="/portfolio/"
+      run: flutter build web --web-renderer auto --release --base-href "/"
     
     # 아티팩트 업로드 (선택적)
     - uses: actions/upload-artifact@v3
@@ -77,4 +77,3 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./web-build  # 다운로드한 아티팩트 경로 ./build/web에서 변경
-        publish_branch: gh-pages
