@@ -4,11 +4,11 @@ name: Flutter CI
 on:
   push:
     paths:
-      - 'AboutFlutter/portfolio/**'  # 특정 프로젝트 폴더에서 변경 시에만 트리거
+      - 'portfolio/**'  # 특정 프로젝트 폴더에서 변경 시에만 트리거
     branches: [ Development ]
   pull_request:
     paths:
-      - 'AboutFlutter/portfolio/**'
+      - 'portfolio/**'
     branches: [ Development ]
 
 jobs:
@@ -20,7 +20,7 @@ jobs:
     # 작업 수행 디렉토리 지정
     defaults:
       run:
-        working-directory: AboutFlutter/portfolio
+        working-directory: portfolio
 
     steps:
     # 코드 체크아웃
@@ -64,8 +64,7 @@ jobs:
     # 빌드 결과 병합
     - name: Merge builds
       run: |
-        mkdir -p ../web-dist/html
-        mkdir -p ../web-dist/canvaskit
+        mkdir -p ../web-dist/html ../web-dist/canvaskit
         mv ../build-html/* ../web-dist/html/
         mv ../build-canvaskit/* ../web-dist/canvaskit/
 
