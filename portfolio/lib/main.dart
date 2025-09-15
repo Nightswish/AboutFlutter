@@ -2,6 +2,7 @@ import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'core/responsive.dart';
 // import 'package:flutter/foundation.dart';
 // import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -107,31 +108,113 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDesktop = Responsive.isDesktop(context); // ✅ 데스크탑 여부 판별
+
     // Scaffold는 앱의 기본적인 시각 구조(앱바, 본문, 하단바 등)를 제공하는 위젯
     return Scaffold(
       body: Center( // 본문 내용을 화면 중앙에 배치
-        child: Column( // 위젯들을 세로로 쌓을 때 쓰는 위젯
-          mainAxisAlignment: MainAxisAlignment.center, // 세로축으로 위젯들을 중앙 정렬
-          children: [ // Column 안에 들어갈 위젯 목록
-            const Text( // 그냥 텍스트를 보여주는 위젯
-              '👋 Welcome to My Portfolio!',
-              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold), // 글자 스타일 설정
+        child: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.deepPurple, Colors.indigo],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
-            const SizedBox(height: 20), // 간격 조절용
-            ElevatedButton( // 약간 튀어나온 느낌의 버튼 위젯
-              onPressed: () => context.go('/privacy'),  // context.go는 GoRouter가 제공하는 화면 이동 함수
-              child: const Text('Privacy Policy'), // 버튼 위에 표시될 텍스트
+          ),
+          child: SafeArea(
+            child: Column( // 위젯들을 세로로 쌓을 때 쓰는 위젯
+                mainAxisAlignment: MainAxisAlignment.center, // 세로축으로 위젯들을 중앙 정렬
+                children: [ // Column 안에 들어갈 위젯 목록
+                  const HeroTitleHome(),
+                  const SizedBox(height: 32), // 간격 조절용
+
+                  // ✅ 버튼 레이아웃 반응형 적용
+                  isDesktop
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            _buildButton(
+                              context,
+                              label: "Go to Privacy",
+                              onTap: () => context.go("/privacy"),
+                            ),
+                            _buildButton(
+                              context,
+                              label: "Go to Terms",
+                              onTap: () => context.go("/terms"),
+                            ),
+                            _buildButton(
+                              context,
+                              label: "Go to Render Page",
+                              onTap: () => context.go("/render"),
+                            ),
+                          ],
+                        )
+                      : Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            _buildButton(
+                              context,
+                              label: "Go to Privacy",
+                              onTap: () => context.go("/privacy"),
+                            ),
+                            _buildButton(
+                              context,
+                              label: "Go to Terms",
+                              onTap: () => context.go("/terms"),
+                            ),
+                            _buildButton(
+                              context,
+                              label: "Go to Render Page",
+                              onTap: () => context.go("/render"),
+                            ),
+                          ],
+                        ),
+                ],
+              ),
+          ),
+        )
+      ),
+    );
+  }
+
+  /// 버튼 위젯 빌더
+  Widget _buildButton(BuildContext context,
+      {required String label, required VoidCallback onTap}) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ElevatedButton(
+        onPressed: onTap,
+        style: ElevatedButton.styleFrom(
+          padding: EdgeInsets.symmetric(
+            horizontal: Responsive.value(
+              context: context,
+              mobile: 24,
+              tablet: 32,
+              desktop: 48,
+              fallback: 24,
             ),
-            ElevatedButton(
-              onPressed: () => context.go('/terms'), // 버튼을 누르면 '/terms' 경로로 이동
-              child: const Text('Terms of Service'),
+            vertical: Responsive.value(
+              context: context,
+              mobile: 12,
+              tablet: 16,
+              desktop: 20,
+              fallback: 12,
             ),
-            ElevatedButton(
-              onPressed: () => context.go('/render'), 
-              child: const Text('Try Renderer Demo'),
+          ),
+          textStyle: TextStyle(
+            fontSize: Responsive.fontSize(
+              context: context,
+              mobile: 14,
+              tablet: 16,
+              desktop: 18,
             ),
-          ],
+            fontWeight: FontWeight.bold,
+          ),
         ),
+        child: Text(label),
       ),
     );
   }
@@ -268,6 +351,14 @@ class HeroTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Responsive 기반 글꼴 크기 계산
+    final fontSize = Responsive.fontSize(
+      context: context,
+      mobile: 28,
+      tablet: 36,
+      desktop: 48,
+    );
+
     return Hero( // 위젯 간의 시각적 연결 애니메이션 (다른 화면으로 전환될 때 유용)
       tag: "Rendering Page", // 고유 태그 (같은 태그를 가진 다른 화면의 위젯과 연결됨)
       child: Material( // 텍스트 위젯에 Material 디자인 효과 (그림자 등)를 적용하기 위해 감싸줌
@@ -276,7 +367,7 @@ class HeroTitle extends StatelessWidget {
           "Check Rendering",
           textAlign: TextAlign.center,
           style: GoogleFonts.poppins( // Google Fonts의 Poppins 글꼴 사용 (개별 위젯에서 폰트 오버라이드)
-            fontSize: 48,
+            fontSize: fontSize, // ✅ 반응형 적용
             fontWeight: FontWeight.bold,
             color: Colors.white,
             shadows: [ // 텍스트에 그림자 효과 추가
@@ -293,165 +384,51 @@ class HeroTitle extends StatelessWidget {
   }
 }
 
-// 애플리케이션의 루트 위젯
-// class MyApp extends StatelessWidget {
-//   const MyApp({super.key});
+class HeroTitleHome extends StatelessWidget {
+  const HeroTitleHome({super.key});
 
-//   // This widget is the root of your application.
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       // 앱 기본 설정
-//       title: 'Flutter Demo',
-//       // 디버그 배너 제거
-//       debugShowCheckedModeBanner: false,
-//       // 기본 테마 설정 (임시)
-//       theme: ThemeData(
-//         // This is the theme of your application.
-//         //
-//         // TRY THIS: Try running your application with "flutter run". You'll see
-//         // the application has a purple toolbar. Then, without quitting the app,
-//         // try changing the seedColor in the colorScheme below to Colors.green
-//         // and then invoke "hot reload" (save your changes or press the "hot
-//         // reload" button in a Flutter-supported IDE, or press "r" if you used
-//         // the command line to start the app).
-//         //
-//         // Notice that the counter didn't reset back to zero; the application
-//         // state is not lost during the reload. To reset the state, use hot
-//         // restart instead.
-//         //
-//         // This works for code too, not just values: Most code changes can be
-//         // tested with just a hot reload.
-//         // 기본 색상 스키마
-//         colorScheme: ColorScheme.fromSeed(
-//           seedColor: Colors.blue,
-//           brightness: Brightness.light,
-//         ),
-//         // 머티리얼 디자인 3 활성화
-//         useMaterial3: true,
-//       ),
-//       // 다크 테마 (선택적)
-//       darkTheme: ThemeData(
-//         colorScheme: ColorScheme.fromSeed(
-//           seedColor: Colors.blue,
-//           brightness: Brightness.dark,
-//         ),
-//         useMaterial3: true,
-//       ),
-//       // 테마 모드 (라이트 모드)
-//       themeMode: ThemeMode.light,
-//       // 초기 홈 페이지
-//       home: const HomeScreen(),
-//       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    final isMobile = Responsive.isMobile(context);
+    final isTablet = Responsive.isTablet(context);
+    final isDesktop = Responsive.isDesktop(context);
 
-// // 임시 홈
-// class HomeScreen extends StatelessWidget {
-//   const HomeScreen({Key? key}) : super(key: key);
+    if (isMobile) {
+      return const Text(
+        '👋 Welcome!', // 모바일에서는 짧게
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: Colors.black,
+        ),
+      );
+    } else if (isTablet) {
+      return const Text(
+        '👋 Welcome to\nMy Portfolio!', // 두 줄로 표시
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 26,
+          fontWeight: FontWeight.bold,
+          color: Colors.black,
+        ),
+      );
+    } else if (isDesktop) {
+      return Text(
+        '👋 Welcome to My Portfolio!', // 데스크탑에서는 여유 있는 스타일
+        textAlign: TextAlign.center,
+        style: GoogleFonts.poppins(
+          fontSize: 34,
+          fontWeight: FontWeight.w600,
+          color: Colors.black87,
+        ),
+      );
+    }
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('DEv Start'),
-//       ),
-//       body: const Center(
-//         child: Text(
-//           '개발 시작!',
-//           style: TextStyle(
-//             fontSize: 24,
-//             fontWeight: FontWeight.bold,
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-// class MyHomePage extends StatefulWidget {
-//   const MyHomePage({super.key, required this.title});
-
-//   // This widget is the home page of your application. It is stateful, meaning
-//   // that it has a State object (defined below) that contains fields that affect
-//   // how it looks.
-
-//   // This class is the configuration for the state. It holds the values (in this
-//   // case the title) provided by the parent (in this case the App widget) and
-//   // used by the build method of the State. Fields in a Widget subclass are
-//   // always marked "final".
-
-//   final String title;
-
-//   @override
-//   State<MyHomePage> createState() => _MyHomePageState();
-// }
-
-// class _MyHomePageState extends State<MyHomePage> {
-//   int _counter = 0;
-
-//   void _incrementCounter() {
-//     setState(() {
-//       // This call to setState tells the Flutter framework that something has
-//       // changed in this State, which causes it to rerun the build method below
-//       // so that the display can reflect the updated values. If we changed
-//       // _counter without calling setState(), then the build method would not be
-//       // called again, and so nothing would appear to happen.
-//       _counter++;
-//     });
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     // This method is rerun every time setState is called, for instance as done
-//     // by the _incrementCounter method above.
-//     //
-//     // The Flutter framework has been optimized to make rerunning build methods
-//     // fast, so that you can just rebuild anything that needs updating rather
-//     // than having to individually change instances of widgets.
-//     return Scaffold(
-//       appBar: AppBar(
-//         // TRY THIS: Try changing the color here to a specific color (to
-//         // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-//         // change color while the other colors stay the same.
-//         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-//         // Here we take the value from the MyHomePage object that was created by
-//         // the App.build method, and use it to set our appbar title.
-//         title: Text(widget.title),
-//       ),
-//       body: Center(
-//         // Center is a layout widget. It takes a single child and positions it
-//         // in the middle of the parent.
-//         child: Column(
-//           // Column is also a layout widget. It takes a list of children and
-//           // arranges them vertically. By default, it sizes itself to fit its
-//           // children horizontally, and tries to be as tall as its parent.
-//           //
-//           // Column has various properties to control how it sizes itself and
-//           // how it positions its children. Here we use mainAxisAlignment to
-//           // center the children vertically; the main axis here is the vertical
-//           // axis because Columns are vertical (the cross axis would be
-//           // horizontal).
-//           //
-//           // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-//           // action in the IDE, or press "p" in the console), to see the
-//           // wireframe for each widget.
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: <Widget>[
-//             const Text('You have pushed the button this many times:'),
-//             Text(
-//               '$_counter',
-//               style: Theme.of(context).textTheme.headlineMedium,
-//             ),
-//           ],
-//         ),
-//       ),
-//       floatingActionButton: FloatingActionButton(
-//         onPressed: _incrementCounter,
-//         tooltip: 'Increment',
-//         child: const Icon(Icons.add),
-//       ), // This trailing comma makes auto-formatting nicer for build methods.
-//     );
-//   }
-// }
+    // fallback (혹시라도 조건이 안맞을 경우)
+    return const Text(
+      '👋 Welcome!',
+      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+    );
+  }
+}
