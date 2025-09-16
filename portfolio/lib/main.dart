@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';// Flutter 기본 패키지
 import 'package:go_router/go_router.dart'; // GoRouter: 선언적 라우팅 관리
 import 'package:google_fonts/google_fonts.dart'; // Google Fonts
 import 'package:web/web.dart' as html; // 웹 전용 API (웹 빌드에서만 동작)
-import 'package:portfolio/core/responsive.dart'; // 반응형 헬퍼
+import 'package:portfolio/presentation/responsive.dart'; // 반응형 헬퍼
 import 'widgets/hero_section.dart'; 
 // import 'package:flutter/foundation.dart';
 // import 'package:flutter_riverpod/flutter_riverpod.dart';
