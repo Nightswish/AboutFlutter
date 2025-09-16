@@ -1,56 +1,15 @@
-import 'dart:html' as html;
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'core/responsive.dart';
+import 'package:flutter/material.dart';// Flutter 기본 패키지
+import 'package:go_router/go_router.dart'; // GoRouter: 선언적 라우팅 관리
+import 'package:google_fonts/google_fonts.dart'; // Google Fonts
+import 'package:web/web.dart' as html; // 웹 전용 API (웹 빌드에서만 동작)
+import 'package:portfolio/core/responsive.dart'; // 반응형 헬퍼
 // import 'package:flutter/foundation.dart';
 // import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // 애플리케이션의 진입점 및 초기 설정
 void main() {
-  // // Flutter 바인딩 보장 (앱 실행 전 초기화)
-  // WidgetsFlutterBinding.ensureInitialized();
-  // // 전역 에러 핸들러 설정
-  // ErrorWidget.builder = (FlutterErrorDetails details) {
-  //   // 개발 모드에서는 기본 에러 위젯, 프로덕션에서는 사용자 친화적 에러 화면
-  //   return Material(
-  //     child: Container(
-  //       color: Colors.white,
-  //       child: Center(
-  //         child: Column(
-  //           mainAxisAlignment: MainAxisAlignment.center,
-  //           children: [
-  //             const Icon(
-  //               Icons.error_outline,
-  //               color: Colors.red,
-  //               size: 100,
-  //             ),
-  //             const SizedBox(height: 20),
-  //             Text(
-  //               kDebugMode 
-  //                 ? '개발 중 오류 발생: ${details.exception}' 
-  //                 : '죄송합니다. 예상치 못한 오류가 발생했습니다.',
-  //               style: const TextStyle(
-  //                 color: Colors.black,
-  //                 fontSize: 16,
-  //               ),
-  //               textAlign: TextAlign.center,
-  //             ),
-  //           ],
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // };
-
-  
   runApp(
     const PortfolioApp()
-    // Riverpod의 ProviderScope로 앱 래핑
-  // // - 의존성 주입 및 상태 관리를 위한 기본 설정
-  //   const ProviderScope(
-  //     child: MyApp(),
-  //   ),
   );
 }
 
@@ -81,7 +40,7 @@ class PortfolioApp extends StatelessWidget {
         ),
         GoRoute(
           path: '/render',
-          builder: (context, state) => const Render(), 
+          builder: (context, state) => const RenderPage(), 
         ),
       ],
       // 이 외에도 에러 페이지, 리다이렉트 등 다양한 GoRouter 설정이 가능
@@ -112,9 +71,8 @@ class HomePage extends StatelessWidget {
 
     // Scaffold는 앱의 기본적인 시각 구조(앱바, 본문, 하단바 등)를 제공하는 위젯
     return Scaffold(
-      body: Center( // 본문 내용을 화면 중앙에 배치
-        child: Container(
-          width: double.infinity,
+      body: Container( 
+        width: double.infinity,
           height: double.infinity,
           decoration: const BoxDecoration(
             gradient: LinearGradient(
@@ -124,67 +82,45 @@ class HomePage extends StatelessWidget {
             ),
           ),
           child: SafeArea(
-            child: Column( // 위젯들을 세로로 쌓을 때 쓰는 위젯
-                mainAxisAlignment: MainAxisAlignment.center, // 세로축으로 위젯들을 중앙 정렬
-                children: [ // Column 안에 들어갈 위젯 목록
+            child: Padding( // 위젯들을 세로로 쌓을 때 쓰는 위젯
+              padding: Responsive.edgeInsetsAll(
+                    context,
+                    mobile: 16,
+                    tablet: 32,
+                    desktop: 64,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
                   const HeroTitleHome(),
-                  const SizedBox(height: 32), // 간격 조절용
-
-                  // ✅ 버튼 레이아웃 반응형 적용
-                  isDesktop
-                      ? Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            _buildButton(
-                              context,
-                              label: "Go to Privacy",
-                              onTap: () => context.go("/privacy"),
-                            ),
-                            _buildButton(
-                              context,
-                              label: "Go to Terms",
-                              onTap: () => context.go("/terms"),
-                            ),
-                            _buildButton(
-                              context,
-                              label: "Go to Render Page",
-                              onTap: () => context.go("/render"),
-                            ),
-                          ],
-                        )
-                      : Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            _buildButton(
-                              context,
-                              label: "Go to Privacy",
-                              onTap: () => context.go("/privacy"),
-                            ),
-                            _buildButton(
-                              context,
-                              label: "Go to Terms",
-                              onTap: () => context.go("/terms"),
-                            ),
-                            _buildButton(
-                              context,
-                              label: "Go to Render Page",
-                              onTap: () => context.go("/render"),
-                            ),
-                          ],
-                        ),
+                  SizedBox(
+                    height: Responsive.value(context: context, mobile: 16, tablet: 24, desktop: 32),
+                  ),      
+                  // 버튼 영역 반응형: 데스크탑은 Row, 나머지는 Column
+                  Flex(
+                    direction: isDesktop ? Axis.horizontal : Axis.vertical,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _buildButton(context, label: "Go to Privacy", onTap: () => context.go("/privacy")),
+                      _buildButton(context, label: "Go to Terms", onTap: () => context.go("/terms")),
+                      _buildButton(context, label: "Go to Render Page", onTap: () => context.go("/render")),
+                    ],
+                  )
                 ],
               ),
+            ),
           ),
-        )
       ),
     );
   }
 
-  /// 버튼 위젯 빌더
+  /// 버튼 위젯 빌더(헬퍼)
   Widget _buildButton(BuildContext context,
       {required String label, required VoidCallback onTap}) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: EdgeInsets.all(
+        Responsive.value(context: context, mobile: 6.0, tablet: 8.0, desktop: 12.0),
+      ),
       child: ElevatedButton(
         onPressed: onTap,
         style: ElevatedButton.styleFrom(
@@ -242,15 +178,14 @@ class TermsPage extends StatelessWidget {
   }
 }
 
-class Render extends StatefulWidget {
-  const Render({super.key});
+class RenderPage extends StatefulWidget {
+  const RenderPage({super.key});
 
   @override
-  State<Render> createState() => _Render();
+  State<RenderPage> createState() => _RenderPage();
 }
 
-class _Render extends State<Render>
-    with SingleTickerProviderStateMixin {
+class _RenderPage extends State<RenderPage> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fadeIn;
 
@@ -274,6 +209,7 @@ class _Render extends State<Render>
 
   @override
   Widget build(BuildContext context) {
+    final isDesktop = Responsive.isDesktop(context);
     final size = MediaQuery.of(context).size; // 현재 화면 크기 가져오기
 
     return Scaffold(
@@ -296,46 +232,53 @@ class _Render extends State<Render>
           Center(
             child: FadeTransition( // 불투명도를 애니메이션으로 변경하는 위젯
               opacity: _fadeIn, // 위에서 정의한 페이드인 애니메이션 사용
-              child: Column( // 세로 방향으로 위젯들을 배치
-                mainAxisSize: MainAxisSize.min, // 컬럼의 크기를 자식 위젯들에 맞게 최소화
-                children: [
-                  const HeroTitle(), // 히어로 섹션 제목 위젯
-                  const SizedBox(height: 20), // 제목과 버튼 사이 간격
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom( // 버튼 스타일 정의
-                      padding: const EdgeInsets.symmetric( // 내부 패딩
-                          horizontal: 32, vertical: 16),
-                      shape: RoundedRectangleBorder( // 버튼 모서리 둥글게
-                        borderRadius: BorderRadius.circular(12),
-                      ),
+              child: Padding(
+                padding: Responsive.edgeInsetsAll(context, mobile: 16, tablet: 24, desktop: 32),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const HeroTitle(),
+                    SizedBox(
+                      height: Responsive.value(context: context, mobile: 12, tablet: 20, desktop: 28),
                     ),
-                    onPressed: () {
-                      // 이 버튼을 누르면 HomePage로 이동하도록 GoRouter 사용
-                      context.go('/'); // HomePage 경로로 이동!
-                    },
-                    child: const Text("Back to Home"), // 버튼 텍스트
-                  ),
-                  const SizedBox(height: 20),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: Responsive.value(context: context, mobile: 24, tablet: 32, desktop: 48),
+                          vertical: Responsive.value(context: context, mobile: 12, tablet: 16, desktop: 20),
+                        ),
+                      ),
+                      onPressed: () => context.go('/'),
+                      child: const Text("Back to Home"),
+                    ),
+                    SizedBox(
+                      height: Responsive.value(context: context, mobile: 12, tablet: 16, desktop: 20),
+                    ),
 
-                  // HTML 렌더러 테스트 버튼
-                  ElevatedButton(
-                    onPressed: () {
-                      const url = "https://username.github.io/html/";
-                      html.window.open(url, "_blank");
-                    },
-                    child: const Text("Try HTML Renderer"),
-                  ),
-                  const SizedBox(height: 10),
-
-                  // CanvasKit 렌더러 테스트 버튼
-                  ElevatedButton(
-                    onPressed: () {
-                      const url = "https://username.github.io/canvaskit/";
-                      html.window.open(url, "_blank");
-                    },
-                    child: const Text("Try CanvasKit Renderer"),
-                  ),
-                ],
+                    // HTML / CanvasKit 버튼
+                    Flex(
+                      direction: isDesktop ? Axis.horizontal : Axis.vertical,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            const url = "https://username.github.io/html/";
+                            html.window.open(url, "_blank");
+                          },
+                          child: const Text("Try HTML Renderer"),
+                        ),
+                        SizedBox(width: isDesktop ? 16 : 0, height: isDesktop ? 0 : 12),
+                        ElevatedButton(
+                          onPressed: () {
+                            const url = "https://username.github.io/canvaskit/";
+                            html.window.open(url, "_blank");
+                          },
+                          child: const Text("Try CanvasKit Renderer"),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -352,12 +295,7 @@ class HeroTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Responsive 기반 글꼴 크기 계산
-    final fontSize = Responsive.fontSize(
-      context: context,
-      mobile: 28,
-      tablet: 36,
-      desktop: 48,
-    );
+    final fontSize = Responsive.fontSize(context: context, mobile: 28, tablet: 36, desktop: 48);
 
     return Hero( // 위젯 간의 시각적 연결 애니메이션 (다른 화면으로 전환될 때 유용)
       tag: "Rendering Page", // 고유 태그 (같은 태그를 가진 다른 화면의 위젯과 연결됨)
@@ -373,7 +311,7 @@ class HeroTitle extends StatelessWidget {
             shadows: [ // 텍스트에 그림자 효과 추가
               Shadow(
                 blurRadius: 8,
-                color: Colors.black.withOpacity(0.5), // 검은색에 50% 불투명도
+                color: Colors.black.withAlpha((0.5 * 255).round()), // withOpacity -> withValues
                 offset: const Offset(2, 2), // 그림자 위치 (x, y)
               )
             ],
@@ -389,46 +327,19 @@ class HeroTitleHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isMobile = Responsive.isMobile(context);
-    final isTablet = Responsive.isTablet(context);
-    final isDesktop = Responsive.isDesktop(context);
-
-    if (isMobile) {
-      return const Text(
-        '👋 Welcome!', // 모바일에서는 짧게
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-          color: Colors.black,
-        ),
-      );
-    } else if (isTablet) {
-      return const Text(
-        '👋 Welcome to\nMy Portfolio!', // 두 줄로 표시
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: 26,
-          fontWeight: FontWeight.bold,
-          color: Colors.black,
-        ),
-      );
-    } else if (isDesktop) {
-      return Text(
-        '👋 Welcome to My Portfolio!', // 데스크탑에서는 여유 있는 스타일
-        textAlign: TextAlign.center,
-        style: GoogleFonts.poppins(
-          fontSize: 34,
-          fontWeight: FontWeight.w600,
-          color: Colors.black87,
-        ),
-      );
-    }
-
-    // fallback (혹시라도 조건이 안맞을 경우)
-    return const Text(
-      '👋 Welcome!',
-      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+    return Text(
+      Responsive.value(
+        context: context,
+        mobile: '👋 Welcome!',
+        tablet: '👋 Welcome to\nMy Portfolio!',
+        desktop: '👋 Welcome to My Portfolio!',
+      ),
+      textAlign: TextAlign.center,
+      style: GoogleFonts.poppins(
+        fontSize: Responsive.fontSize(context: context, mobile: 20, tablet: 26, desktop: 34),
+        fontWeight: FontWeight.w600,
+        color: Colors.black87,
+      ),
     );
   }
 }

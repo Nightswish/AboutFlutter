@@ -62,6 +62,9 @@ dependencies:
   # 다국어(로컬라이제이션) 지원
   flutter_localizations:
     sdk: flutter
+  
+  # 웹 앱에서의 브라우저 기능
+  web: ^0.5.1
 
 dev_dependencies:
   flutter_test:

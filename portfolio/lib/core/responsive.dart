@@ -1,4 +1,3 @@
-// lib/core/responsive.dart
 import 'package:flutter/widgets.dart';
 
 /// 디바이스 타입 정의
@@ -21,6 +20,7 @@ class Breakpoints {
 /// Responsive 헬퍼 클래스
 /// - MediaQuery 또는 LayoutBuilder에서 얻은 width로 DeviceScreenType 판정
 /// - value<T>()로 브레이크포인트 별 값을 편리하게 반환
+/// Convert width to DeviceScreenType
 class Responsive {
   Responsive._(); // 인스턴스화 금지 (static API 전용)
 
@@ -35,6 +35,7 @@ class Responsive {
   /// context → DeviceScreenType
   /// BuildContext에서 현재 DeviceScreenType을 반환
   /// MediaQuery.of(context).size.width 를 내부에서 사용함.
+  /// Get current DeviceScreenType from BuildContext
   static DeviceScreenType of(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     return deviceTypeFromWidth(width);
@@ -46,6 +47,10 @@ class Responsive {
   static bool isDesktop(BuildContext context) =>
       of(context) == DeviceScreenType.desktop || of(context) == DeviceScreenType.largeDesktop;
 
+  static double deviceWidth(BuildContext context) => MediaQuery.of(context).size.width;
+  static double deviceHeight(BuildContext context) => MediaQuery.of(context).size.height;
+  static bool isLandscape(BuildContext context) => MediaQuery.of(context).orientation == Orientation.landscape;
+
   /// 제네릭 값 반환
   static T value<T>({
     required BuildContext context,
@@ -53,20 +58,30 @@ class Responsive {
     T? tablet,
     T? desktop,
     T? largeDesktop,
-    required T fallback,
+    T? fallback,
   }) {
     final device = of(context);
+    T? result;
     switch (device) {
       case DeviceScreenType.largeDesktop:
-        return largeDesktop ?? desktop ?? tablet ?? mobile ?? fallback;
+        result = largeDesktop ?? desktop ?? tablet ?? mobile ?? fallback;
+        break;
       case DeviceScreenType.desktop:
-        return desktop ?? tablet ?? mobile ?? fallback;
+        result = desktop ?? tablet ?? mobile ?? fallback;
+        break;
       case DeviceScreenType.tablet:
-        return tablet ?? mobile ?? fallback;
+        result = tablet ?? mobile ?? fallback;
+        break;
       case DeviceScreenType.mobile:
       default:
-        return mobile ?? fallback;
+        result = mobile ?? fallback;
+        break;
     }
+    if (result == null) {
+      throw ArgumentError(
+          'Responsive.value: no value provided for current device and no fallback. Provide at least one of mobile/tablet/desktop/largeDesktop/fallback.');
+    }
+    return result;
   }
 
   /// 접근성 대응 텍스트 크기 반환
@@ -85,12 +100,69 @@ class Responsive {
       largeDesktop: largeDesktop ?? desktop,
       fallback: mobile,
     );
-    final textScale = MediaQuery.of(context).textScaleFactor;
-    return base * textScale;
+    final textScale = MediaQuery.of(context).textScaler;
+    return textScale.scale(base);
+  }
+
+  /// Recommend columns count for a width (useful for grid layouts)
+  static int columnsForWidth(double width) {
+    if (width >= 1366) return 4;
+    if (width >= 1024) return 3;
+    if (width >= 600) return 2;
+    return 1;
+  }
+
+  static int columns(BuildContext context) => columnsForWidth(deviceWidth(context));
+
+  /// ✅ 새로 추가된 메서드: 브레이크포인트별 균일 패딩 반환
+  static EdgeInsets edgeInsetsAll(
+    BuildContext context, {
+    double mobile = 16,
+    double tablet = 24,
+    double desktop = 32,
+    double? largeDesktop,
+  }) {
+    final v = value<double>(
+      context: context,
+      mobile: mobile,
+      tablet: tablet,
+      desktop: desktop,
+      largeDesktop: largeDesktop ?? desktop,
+      fallback: mobile,
+    );
+    return EdgeInsets.all(v);
+  }
+
+  /// edgeInsetsSymmetric helper (horizontal/vertical)
+  static EdgeInsets edgeInsetsSymmetric(
+    BuildContext context, {
+    double mobileHorizontal = 16,
+    double tabletHorizontal = 24,
+    double desktopHorizontal = 32,
+    double mobileVertical = 8,
+    double tabletVertical = 12,
+    double desktopVertical = 16,
+  }) {
+    final h = value<double>(
+      context: context,
+      mobile: mobileHorizontal,
+      tablet: tabletHorizontal,
+      desktop: desktopHorizontal,
+      fallback: mobileHorizontal,
+    );
+    final v = value<double>(
+      context: context,
+      mobile: mobileVertical,
+      tablet: tabletVertical,
+      desktop: desktopVertical,
+      fallback: mobileVertical,
+    );
+    return EdgeInsets.symmetric(horizontal: h, vertical: v);
   }
 }
 
 /// LayoutBuilder 기반 빌더
+/// ResponsiveBuilder: LayoutBuilder 기반으로 device type을 제공하는 빌더
 class ResponsiveBuilder extends StatelessWidget {
   final Widget Function(BuildContext, DeviceScreenType) builder;
 
