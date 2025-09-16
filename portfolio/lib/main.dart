@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart'; // GoRouter: 선언적 라우팅 관�
 import 'package:google_fonts/google_fonts.dart'; // Google Fonts
 import 'package:web/web.dart' as html; // 웹 전용 API (웹 빌드에서만 동작)
 import 'package:portfolio/core/responsive.dart'; // 반응형 헬퍼
+import 'widgets/hero_section.dart'; 
 // import 'package:flutter/foundation.dart';
 // import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -81,35 +82,38 @@ class HomePage extends StatelessWidget {
               end: Alignment.bottomRight,
             ),
           ),
-          child: SafeArea(
-            child: Padding( // 위젯들을 세로로 쌓을 때 쓰는 위젯
-              padding: Responsive.edgeInsetsAll(
-                    context,
-                    mobile: 16,
-                    tablet: 32,
-                    desktop: 64,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const HeroTitleHome(),
-                  SizedBox(
-                    height: Responsive.value(context: context, mobile: 16, tablet: 24, desktop: 32),
-                  ),      
-                  // 버튼 영역 반응형: 데스크탑은 Row, 나머지는 Column
-                  Flex(
-                    direction: isDesktop ? Axis.horizontal : Axis.vertical,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _buildButton(context, label: "Go to Privacy", onTap: () => context.go("/privacy")),
-                      _buildButton(context, label: "Go to Terms", onTap: () => context.go("/terms")),
-                      _buildButton(context, label: "Go to Render Page", onTap: () => context.go("/render")),
-                    ],
-                  )
-                ],
-              ),
-            ),
+          child: const Center(
+            child: HeroSection(),
           ),
+          // child: SafeArea(
+          //   child: Padding( // 위젯들을 세로로 쌓을 때 쓰는 위젯
+          //     padding: Responsive.edgeInsetsAll(
+          //           context,
+          //           mobile: 16,
+          //           tablet: 32,
+          //           desktop: 64,
+          //     ),
+          //     child: Column(
+          //       mainAxisAlignment: MainAxisAlignment.center,
+          //       children: [
+          //         const HeroTitleHome(),
+          //         SizedBox(
+          //           height: Responsive.value(context: context, mobile: 16, tablet: 24, desktop: 32),
+          //         ),      
+          //         // 버튼 영역 반응형: 데스크탑은 Row, 나머지는 Column
+          //         Flex(
+          //           direction: isDesktop ? Axis.horizontal : Axis.vertical,
+          //           mainAxisAlignment: MainAxisAlignment.center,
+          //           children: [
+          //             _buildButton(context, label: "Go to Privacy", onTap: () => context.go("/privacy")),
+          //             _buildButton(context, label: "Go to Terms", onTap: () => context.go("/terms")),
+          //             _buildButton(context, label: "Go to Render Page", onTap: () => context.go("/render")),
+          //           ],
+          //         )
+          //       ],
+          //     ),
+          //   ),
+          // ),
       ),
     );
   }
