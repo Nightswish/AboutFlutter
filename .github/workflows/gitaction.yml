@@ -1,4 +1,4 @@
-name: Flutter CI
+name: Flutter CI/CD
 
 # 트리거 조건
 on:
@@ -72,7 +72,7 @@ jobs:
     - uses: actions/upload-artifact@v4
       with:
         name: web-dist
-        path: web-dist
+        path: ../web-dist
 
   # CD - Github Pages 
   deploy:
