@@ -3,8 +3,8 @@ name: Flutter CI/CD
 # 트리거 조건
 on:
   push:
-    paths:
-      - 'portfolio/**'  # 특정 프로젝트 폴더에서 변경 시에만 트리거
+    #paths:
+    #  - 'portfolio/**'  # 특정 프로젝트 폴더에서 변경 시에만 트리거
     branches: [ Development ]
   pull_request:
     paths:
