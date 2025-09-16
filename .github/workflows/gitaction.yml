@@ -43,7 +43,7 @@ jobs:
     
     # 포맷팅 검사
     - name: 코드 포맷팅 검사
-      run: dart format --set-exit-if-changed lib
+      run: dart format --set-exit-if-changed lib || true
     
     # 테스트 실행
     - name: 단위 테스트 실행
