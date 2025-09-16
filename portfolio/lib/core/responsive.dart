@@ -73,9 +73,6 @@ class Responsive {
         result = tablet ?? mobile ?? fallback;
         break;
       case DeviceScreenType.mobile:
-      default:
-        result = mobile ?? fallback;
-        break;
     }
     if (result == null) {
       throw ArgumentError(

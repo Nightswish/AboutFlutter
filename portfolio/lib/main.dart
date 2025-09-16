@@ -68,8 +68,6 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDesktop = Responsive.isDesktop(context); // ✅ 데스크탑 여부 판별
-
     // Scaffold는 앱의 기본적인 시각 구조(앱바, 본문, 하단바 등)를 제공하는 위젯
     return Scaffold(
       body: Container( 
@@ -119,45 +117,45 @@ class HomePage extends StatelessWidget {
   }
 
   /// 버튼 위젯 빌더(헬퍼)
-  Widget _buildButton(BuildContext context,
-      {required String label, required VoidCallback onTap}) {
-    return Padding(
-      padding: EdgeInsets.all(
-        Responsive.value(context: context, mobile: 6.0, tablet: 8.0, desktop: 12.0),
-      ),
-      child: ElevatedButton(
-        onPressed: onTap,
-        style: ElevatedButton.styleFrom(
-          padding: EdgeInsets.symmetric(
-            horizontal: Responsive.value(
-              context: context,
-              mobile: 24,
-              tablet: 32,
-              desktop: 48,
-              fallback: 24,
-            ),
-            vertical: Responsive.value(
-              context: context,
-              mobile: 12,
-              tablet: 16,
-              desktop: 20,
-              fallback: 12,
-            ),
-          ),
-          textStyle: TextStyle(
-            fontSize: Responsive.fontSize(
-              context: context,
-              mobile: 14,
-              tablet: 16,
-              desktop: 18,
-            ),
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        child: Text(label),
-      ),
-    );
-  }
+  // Widget _buildButton(BuildContext context,
+  //     {required String label, required VoidCallback onTap}) {
+  //   return Padding(
+  //     padding: EdgeInsets.all(
+  //       Responsive.value(context: context, mobile: 6.0, tablet: 8.0, desktop: 12.0),
+  //     ),
+  //     child: ElevatedButton(
+  //       onPressed: onTap,
+  //       style: ElevatedButton.styleFrom(
+  //         padding: EdgeInsets.symmetric(
+  //           horizontal: Responsive.value(
+  //             context: context,
+  //             mobile: 24,
+  //             tablet: 32,
+  //             desktop: 48,
+  //             fallback: 24,
+  //           ),
+  //           vertical: Responsive.value(
+  //             context: context,
+  //             mobile: 12,
+  //             tablet: 16,
+  //             desktop: 20,
+  //             fallback: 12,
+  //           ),
+  //         ),
+  //         textStyle: TextStyle(
+  //           fontSize: Responsive.fontSize(
+  //             context: context,
+  //             mobile: 14,
+  //             tablet: 16,
+  //             desktop: 18,
+  //           ),
+  //           fontWeight: FontWeight.bold,
+  //         ),
+  //       ),
+  //       child: Text(label),
+  //     ),
+  //   );
+  // }
 }
 
 class PrivacyPolicyPage extends StatelessWidget {

@@ -84,7 +84,7 @@ class _HeroSectionState extends State<HeroSection>
                   shadows: [
                     Shadow(
                       blurRadius: 10,
-                      color: Colors.black.withOpacity(0.4),
+                      color: Colors.black.withAlpha((0.4 * 255).round()),
                       offset: const Offset(2, 2),
                     )
                   ],
