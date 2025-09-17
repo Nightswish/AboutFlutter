@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart'; // Google Fonts
 import 'package:web/web.dart' as html; // 웹 전용 API (웹 빌드에서만 동작)
 import 'package:portfolio/presentation/responsive.dart'; // 반응형 헬퍼
 import 'widgets/hero_section.dart'; 
+import 'core/theme/theme.dart'; 
 // import 'package:flutter/foundation.dart';
 // import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -13,6 +14,8 @@ void main() {
     const PortfolioApp()
   );
 }
+/// 전역 ThemeMode 상태
+final themeModeNotifier = ValueNotifier<ThemeMode>(ThemeMode.system);
 
 class PortfolioApp extends StatelessWidget {
   // 생성자. super.key는 위젯 고유 식별자 같은 것
@@ -47,18 +50,29 @@ class PortfolioApp extends StatelessWidget {
       // 이 외에도 에러 페이지, 리다이렉트 등 다양한 GoRouter 설정이 가능
     );
 
-    // ✨ MaterialApp.router 위젯 ✨
-    // 플러터 앱의 가장 기본이 되는 위젯 중 하나
-    // .router를 붙인 건 GoRouter와 같은 라우팅 라이브러리를 사용할 때 쓰는 방식
-    return MaterialApp.router(
-      debugShowCheckedModeBanner: false, 
-      title: 'My Portfolio', // 앱 작업 관리자(Alt+Tab)나 웹 브라우저 탭에 표시될 앱의 이름
-      theme: ThemeData( // 앱의 전체적인 디자인 테마를 설정
-        primarySwatch: Colors.indigo, // 앱의 주요 색상을 인디고 계열로 설정. (버튼, 앱바 등에 기본 적용됨)
-        fontFamily: 'Pretendard', // 앱 전체의 기본 글꼴
-                                 // (이 글꼴을 사용하려면 pubspec.yaml에 폰트 에셋을 추가하고 설정해야 함!)
-      ),
-      routerConfig: router, // 위에서 정의한 GoRouter 설정을 연결함
+    /// ✨ MaterialApp.router 위젯 ✨
+    /// 플러터 앱의 가장 기본이 되는 위젯 중 하나
+    /// .router를 붙인 건 GoRouter와 같은 라우팅 라이브러리를 사용할 때 쓰는 방식
+    // return MaterialApp.router(
+    //   debugShowCheckedModeBanner: false, 
+    //   title: 'My Portfolio', // 앱 작업 관리자(Alt+Tab)나 웹 브라우저 탭에 표시될 앱의 이름
+    //   theme: AppTheme.lightTheme,
+    //   darkTheme: AppTheme.darkTheme,
+    //   themeMode: ThemeMode.system,
+    //   routerConfig: router, // 위에서 정의한 GoRouter 설정을 연결함
+    // );
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: themeModeNotifier,
+      builder: (context, mode, _) {
+        return MaterialApp.router(
+          debugShowCheckedModeBanner: false,
+          title: 'My Portfolio',
+          theme: AppTheme.lightTheme,     // 라이트 테마
+          darkTheme: AppTheme.darkTheme,  // 다크 테마
+          themeMode: mode,                // 버튼으로 변경 가능
+          routerConfig: router,
+        );
+      },
     );
   }
 }
@@ -70,19 +84,26 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     // Scaffold는 앱의 기본적인 시각 구조(앱바, 본문, 하단바 등)를 제공하는 위젯
     return Scaffold(
-      body: Container( 
-        width: double.infinity,
-          height: double.infinity,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.deepPurple, Colors.indigo],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+      appBar: AppBar(
+        title: const Text("My Portfolio"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.brightness_6),
+            tooltip: "Toggle Theme",
+            onPressed: () {
+              // 현재 모드 확인 후 라이트 ↔ 다크 전환
+              if (themeModeNotifier.value == ThemeMode.light) {
+                themeModeNotifier.value = ThemeMode.dark;
+              } else {
+                themeModeNotifier.value = ThemeMode.light;
+              }
+            },
           ),
-          child: const Center(
-            child: HeroSection(),
-          ),
+        ],
+      ),
+      body: const Center(
+        child: HeroSection(), // 히어로 섹션
+      ),
           // child: SafeArea(
           //   child: Padding( // 위젯들을 세로로 쌓을 때 쓰는 위젯
           //     padding: Responsive.edgeInsetsAll(
@@ -112,7 +133,6 @@ class HomePage extends StatelessWidget {
           //     ),
           //   ),
           // ),
-      ),
     );
   }
 
