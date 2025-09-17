@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../presentation/responsive.dart';
+import '../../presentation/responsive.dart';
 import 'package:go_router/go_router.dart';
 
 /// 히어로 섹션 위젯
