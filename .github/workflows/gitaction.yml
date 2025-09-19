@@ -33,6 +33,10 @@ jobs:
         flutter-version: '3.35.2'
         channel: 'stable'
     
+    # Flutter 버전 확인 (디버깅용)
+    - name: Flutter 버전 확인
+      run: flutter --version
+
     # 의존성 설치
     - name: 의존성 다운로드
       run: flutter pub get
