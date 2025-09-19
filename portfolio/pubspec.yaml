@@ -46,7 +46,7 @@ dependencies:
   google_fonts: ^6.2.1
   
   # 상태 관리 (Riverpod)
-  flutter_riverpod: ^3.0.0
+  flutter_riverpod: ^2.3.7
   
   # SVG 이미지 지원
   #flutter_svg: ^2.0.12
@@ -64,7 +64,10 @@ dependencies:
     sdk: flutter
   
   # 웹 앱에서의 브라우저 기능
-  web: ^0.5.1
+  web: ^1.1.1
+
+  # 테마 저장 등 간단한 로컬 영속성
+  shared_preferences: ^2.2.0
 
 dev_dependencies:
   flutter_test:

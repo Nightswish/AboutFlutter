@@ -4,27 +4,28 @@ import 'package:google_fonts/google_fonts.dart'; // Google Fonts
 import 'package:web/web.dart' as html; // 웹 전용 API (웹 빌드에서만 동작)
 import 'package:portfolio/presentation/responsive.dart'; // 반응형 헬퍼
 import 'shared/widgets/hero_section.dart'; 
-import 'core/theme/theme.dart'; 
-// import 'package:flutter/foundation.dart';
-// import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'core/theme/theme.dart' as app_theme; 
+import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod
+import 'core/providers/theme_provider.dart';
+import 'core/providers/projects_provider.dart';
 
 // 애플리케이션의 진입점 및 초기 설정
 void main() {
-  runApp(
-    const PortfolioApp()
-  );
+  // ProviderScope로 앱 전체를 감싼다 (Riverpod)
+  runApp(const ProviderScope(child: PortfolioApp()));
 }
-/// 전역 ThemeMode 상태
-final themeModeNotifier = ValueNotifier<ThemeMode>(ThemeMode.system);
 
-class PortfolioApp extends StatelessWidget {
+class PortfolioApp extends ConsumerWidget {
   // 생성자. super.key는 위젯 고유 식별자 같은 것
   const PortfolioApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     // build 메서드는 이 위젯이 화면에 어떻게 그려질지를 정의함.
     // context는 위젯 트리의 위치 정보를 담고 있음.
+
+    // theme 상태를 구독(watch)하면 변경 시 재빌드됨
+    final themeMode = ref.watch(themeNotifierProvider);
 
     // ✨ GoRouter 설정 ✨
     // 앱 내에서 어떤 경로(URL)로 접속했을 때 어떤 화면을 보여줄지 정의하는 부분
@@ -61,27 +62,22 @@ class PortfolioApp extends StatelessWidget {
     //   themeMode: ThemeMode.system,
     //   routerConfig: router, // 위에서 정의한 GoRouter 설정을 연결함
     // );
-    return ValueListenableBuilder<ThemeMode>(
-      valueListenable: themeModeNotifier,
-      builder: (context, mode, _) {
-        return MaterialApp.router(
-          debugShowCheckedModeBanner: false,
-          title: 'My Portfolio',
-          theme: AppTheme.lightTheme,     // 라이트 테마
-          darkTheme: AppTheme.darkTheme,  // 다크 테마
-          themeMode: mode,                // 버튼으로 변경 가능
-          routerConfig: router,
-        );
-      },
+    return MaterialApp.router(
+      debugShowCheckedModeBanner: false,
+      title: 'My Portfolio',
+      theme: app_theme.AppTheme.lightTheme,
+      darkTheme: app_theme.AppTheme.darkTheme,
+      themeMode: themeMode, // Riverpod에서 공급된 모드 사용
+      routerConfig: router,
     );
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends ConsumerWidget {
   const HomePage({super.key}); // 상태 변화 X
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     // Scaffold는 앱의 기본적인 시각 구조(앱바, 본문, 하단바 등)를 제공하는 위젯
     return Scaffold(
       appBar: AppBar(
@@ -91,12 +87,8 @@ class HomePage extends StatelessWidget {
             icon: const Icon(Icons.brightness_6),
             tooltip: "Toggle Theme",
             onPressed: () {
-              // 현재 모드 확인 후 라이트 ↔ 다크 전환
-              if (themeModeNotifier.value == ThemeMode.light) {
-                themeModeNotifier.value = ThemeMode.dark;
-              } else {
-                themeModeNotifier.value = ThemeMode.light;
-              }
+              // ThemeNotifier의 toggleTheme 호출
+              ref.read(themeNotifierProvider.notifier).toggleTheme();
             },
           ),
         ],
