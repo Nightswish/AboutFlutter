@@ -36,8 +36,8 @@ jobs:
     - name: Flutter 환경 설정
       uses: subosito/flutter-action@v2
       with:
-        flutter-version: '3.35.4'
-        channel: 'beta'
+        flutter-version: '3.22.x'
+        channel: 'stable'
     
     # Flutter 버전 확인 (디버깅용)
     - name: Flutter 버전 확인
