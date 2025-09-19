@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';// Flutter 기본 패키지
 import 'package:go_router/go_router.dart'; // GoRouter: 선언적 라우팅 관리
 import 'package:google_fonts/google_fonts.dart'; // Google Fonts
-import 'package:web/web.dart' as html; // 웹 전용 API (웹 빌드에서만 동작)
+
 import 'package:portfolio/presentation/responsive.dart'; // 반응형 헬퍼
 import 'shared/widgets/hero_section.dart'; 
 import 'core/theme/theme.dart' as app_theme; 
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod
 import 'core/providers/theme_provider.dart';
-import 'core/providers/projects_provider.dart';
+// import 'core/providers/projects_provider.dart';
+
+// 조건부 임포트: 웹일 때는 web_utils_web.dart, 아니면 web_utils_stub.dart
+import 'core/utils/web_utils_stub.dart'
+    if (dart.library.html) 'core/utils/web_utils_web.dart';
 
 // 애플리케이션의 진입점 및 초기 설정
 void main() {
@@ -277,7 +281,7 @@ class _RenderPage extends State<RenderPage> with SingleTickerProviderStateMixin 
                         ElevatedButton(
                           onPressed: () {
                             const url = "https://username.github.io/html/";
-                            html.window.open(url, "_blank");
+                            openUrl(url); // ✅ 조건부 임포트된 함수 호출
                           },
                           child: const Text("Try HTML Renderer"),
                         ),
@@ -285,7 +289,7 @@ class _RenderPage extends State<RenderPage> with SingleTickerProviderStateMixin 
                         ElevatedButton(
                           onPressed: () {
                             const url = "https://username.github.io/canvaskit/";
-                            html.window.open(url, "_blank");
+                            openUrl(url); // ✅ 조건부 임포트된 함수 호출
                           },
                           child: const Text("Try CanvasKit Renderer"),
                         ),
