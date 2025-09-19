@@ -11,6 +11,12 @@ on:
       - 'portfolio/**'
     branches: [ Development ]
 
+# GitHub Pages 배포를 위한 필수 권한 설정
+permissions:
+  contents: write # 리포지토리(예: gh-pages 브랜치)에 쓸 권한
+  pages: write    # GitHub Pages 배포 권한
+  id-token: write # OIDC(OpenID Connect) 인증을 위한 토큰 권한 (deploy-pages 액션에서 사용)
+
 jobs:
   # CI
   build:
@@ -53,32 +59,47 @@ jobs:
 #    - name: 단위 테스트 실행
 #      run: flutter test
     
-    # 웹 빌드 - HTML
-    - name: 웹 빌드 - HTML
-      run: flutter build web --web-renderer html --release --base-href "/html/" --output build-html
-
     # 웹 빌드 - CanvasKit
     - name: Build Web - CanvasKit 
       run: |
-        flutter build web \
-          --web-renderer canvaskit \
-          --release \
-          --base-href "/canvaskit/" \
-          --output build-canvaskit
+        echo "Building CanvasKit renderer..."
+          flutter build web \
+            --release \
+            --base-href "/${{ github.event.repository.name }}/canvaskit/" \
+            --output build-canvaskit
+
+    # 웹 빌드 - HTML
+    - name: Setup HTML renderer configuration # index.html 파일 수정하여 HTML 렌더러 사용 설정
+        # 💡 이 부분이 중요해! --web-renderer 옵션 대신 index.html 파일을 수정하는 방식!
+        # 기존 index.html에 <script> 태그를 추가하여 HTML 렌더러를 강제합니다.
+        # sed 명령어는 `<head>` 태그 바로 뒤에 스크립트를 삽입합니다.
+        # 만약 index.html 구조가 달라 에러가 나면 수동으로 파일을 수정하거나
+        # 별도의 'index_html.html' 파일을 준비하여 복사하는 방법을 사용할 수 있습니다.
+      run: |
+          echo "Setting HTML renderer for index.html..."
+          sed -i '/<head>/a <script type="text/javascript">window.flutterWebRenderer = "html";<\/script>' web/index.html
+          cat web/index.html
+
+    - name: 웹 빌드 - HTML
+      run: |
+          flutter build web \
+            --release \
+            --base-href "/${{ github.event.repository.name }}/html/" \
+            --output build-html
+
     
     # 빌드 결과 병합
     - name: Merge builds
       run: |
-        rm -rf web-dist
-        mkdir -p web-dist/html web-dist/canvaskit
-        mv build-html/* web-dist/html/
-        mv build-canvaskit/* web-dist/canvaskit/
+          rm -rf _site 
+          mkdir -p _site/html _site/canvaskit
+          mv build-html/* _site/html/
+          mv build-canvaskit/* _site/canvaskit/
 
     # 아티팩트 업로드 (선택적)
     - uses: actions/upload-artifact@v4
       with:
-        name: web-dist
-        path: ../web-dist
+        path: './_site'
 
   # CD - Github Pages 
   deploy:
@@ -86,15 +107,6 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    # 빌드된 아티팩트 다운로드
-    - uses: actions/download-artifact@v4
-      with:
-        name: web-dist
-        path: ./web-dist 
-    
-    # GitHub Pages 배포
-    - name: GitHub Pages 배포
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GH_ACTIONS_TOKEN }}
-        publish_dir: ./web-dist  # 다운로드한 아티팩트 경로 ./build/web에서 변경
+    - name: Deploy to GitHub Pages # GitHub Pages에 최종 배포
+      id: deployment
+      uses: actions/deploy-pages@v4 
