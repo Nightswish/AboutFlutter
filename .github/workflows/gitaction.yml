@@ -55,12 +55,7 @@ jobs:
     
     # 웹 빌드 - HTML
     - name: 웹 빌드 - HTML
-      run: |
-        flutter build web \
-          --web-renderer html \
-          --release \
-          --base-href "/html/" \
-          -o build-html
+      run: flutter build web --web-renderer html --release --base-href "/html/" --output build-html
 
     # 웹 빌드 - CanvasKit
     - name: Build Web - CanvasKit 
@@ -69,7 +64,7 @@ jobs:
           --web-renderer canvaskit \
           --release \
           --base-href "/canvaskit/" \
-          -o build-canvaskit
+          --output build-canvaskit
     
     # 빌드 결과 병합
     - name: Merge builds
