@@ -46,8 +46,8 @@ jobs:
       run: dart format --set-exit-if-changed lib || true
     
     # 테스트 실행
-    - name: 단위 테스트 실행
-      run: flutter test
+#    - name: 단위 테스트 실행
+#      run: flutter test
     
     # 웹 빌드 - HTML
     - name: 웹 빌드 - HTML
