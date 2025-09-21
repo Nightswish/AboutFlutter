@@ -84,13 +84,26 @@ jobs:
             --output build-html
 
     
-    # 빌드 결과 병합
+        # 빌드 결과 병합
     - name: Merge builds
       run: |
+          echo "Current working directory for merge: $(pwd)" # ✨ 현재 작업 디렉토리 확인
           rm -rf _site 
           mkdir -p _site/html _site/canvaskit
-          mv build-html/* _site/html/
-          mv build-canvaskit/* _site/canvaskit/
+          
+          echo "Contents of build-html directory before move:" # ✨ build-html 폴더 내용 확인
+          ls -R build-html
+          echo "Moving build-html to _site/html..."
+          mv build-html/* _site/html/ # ✨ 와일드카드 * 가 문제일 수도 있으니 디버깅해 봄
+
+          echo "Contents of build-canvaskit directory before move:" # ✨ build-canvaskit 폴더 내용 확인
+          ls -R build-canvaskit
+          echo "Moving build-canvaskit to _site/canvaskit..."
+          mv build-canvaskit/* _site/canvaskit/ # ✨ 와일드카드 * 가 문제일 수도 있으니 디버깅해 봄
+
+          echo '<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0; url=./html/"></head><body>Redirecting to HTML version...</body></html>' > _site/index.html
+          echo 'Combined artifact structure in _site (DEBUG):'
+          ls -R _site # ✨ 이젠 여기에 파일 목록 확인
 
     # 아티팩트 업로드 (선택적)
     - name: Upload GitHub Pages artifact
@@ -103,7 +116,7 @@ jobs:
   deploy:
     needs: build  # build 작업 성공 후 실행
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Deploy to GitHub Pages # GitHub Pages에 최종 배포
       id: deployment
