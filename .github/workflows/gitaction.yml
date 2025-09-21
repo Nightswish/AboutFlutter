@@ -107,6 +107,8 @@ jobs:
   deploy:
     needs: build  # build 작업 성공 후 실행
     runs-on: ubuntu-latest
+    # push 이벤트에서만 배포하도록 제한
+    if: github.event_name == 'push' && github.ref == 'refs/heads/Development'
     
     steps:
     - name: Deploy to GitHub Pages # GitHub Pages에 최종 배포
