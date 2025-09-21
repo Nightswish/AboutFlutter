@@ -6,10 +6,6 @@ on:
     #paths:
     #  - 'portfolio/**'  # 특정 프로젝트 폴더에서 변경 시에만 트리거
     branches: [ Development ]
-  pull_request:
-    paths:
-      - 'portfolio/**'
-    branches: [ Development ]
 
 # GitHub Pages 배포를 위한 필수 권한 설정
 permissions:
@@ -102,15 +98,11 @@ jobs:
       with:
         name: 'github-pages'
         path: './_site'
-      # build , deploy 조건 통일
-      if: github.event_name == 'push' && github.ref == 'refs/heads/Development'
 
   # CD - Github Pages 
   deploy:
     needs: build  # build 작업 성공 후 실행
     runs-on: ubuntu-latest
-    # push 이벤트에서만 배포하도록 제한
-    if: github.event_name == 'push' && github.ref == 'refs/heads/Development'
     
     steps:
     - name: Deploy to GitHub Pages # GitHub Pages에 최종 배포
