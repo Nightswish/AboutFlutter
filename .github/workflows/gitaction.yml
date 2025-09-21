@@ -102,6 +102,8 @@ jobs:
       with:
         name: 'github-pages'
         path: './_site'
+      # build , deploy 조건 통일
+      if: github.event_name == 'push' && github.ref == 'refs/heads/Development'
 
   # CD - Github Pages 
   deploy:
