@@ -91,7 +91,7 @@ jobs:
     
         # 빌드 결과 병합
     - name: Merge builds
-      working-directory: portfolio # ✨ working-directory 명시
+      working-directory: ${{ github.workspace }}
       run: |
           echo "Current working directory for merge: $(pwd)" 
           rm -rf site_output
