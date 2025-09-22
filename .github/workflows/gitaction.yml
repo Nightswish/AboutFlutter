@@ -85,6 +85,7 @@ jobs:
             --output ../build-html_output
     
     - name: Debug build output
+      working-directory: ${{ github.workspace }}
       run: |
         echo "HTML build content"
         find build-html_output -ls
@@ -99,10 +100,9 @@ jobs:
           rm -rf site_output
           mkdir -p site_output/html site_output/canvaskit
           
-          echo "Contents of build directory before move:" 
-          mv build-html_output/* site_output/html/
-          cp -RL build-html_output/. site_output/html/
-          mv build-canvaskit_output/* site_output/canvaskit/
+          echo "Copying build-html_output to site_output/html..."
+          cp -RL build-html_output/. site_output/html/ 
+          echo "Copying build-canvaskit_output to site_output/canvaskit..."
           cp -RL build-canvaskit_output/. site_output/canvaskit/
 
           echo "Applying HTML renderer config to site_output/html/index.html..."
@@ -111,7 +111,7 @@ jobs:
           head -n 20 site_output/html/index.html
 
           echo '<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0; url=./html/"></head><body>Redirecting to HTML version...</body></html>' > site_output/index.html
-          
+
           echo 'Combined artifact structure in site_output (DEBUG):'
           ls -R site_output
 
