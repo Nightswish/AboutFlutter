@@ -71,11 +71,11 @@ jobs:
     # sed 명령어는 `<head>` 태그 바로 뒤에 스크립트를 삽입합니다.
     # 만약 index.html 구조가 달라 에러가 나면 수동으로 파일을 수정하거나
     # 별도의 'index_html.html' 파일을 준비하여 복사하는 방법을 사용할 수 있습니다.
-    - name: Setup HTML renderer configuration 
-      run: |
-          echo "Setting HTML renderer for index.html..."
-          sed -i '/<head>/a <script type="text/javascript">window.flutterWebRenderer = "html";<\/script>' web/index.html
-          cat web/index.html
+    # - name: Setup HTML renderer configuration 
+    #   run: |
+    #       echo "Setting HTML renderer for index.html..."
+    #       sed -i '/<head>/a <script type="text/javascript">window.flutterWebRenderer = "html";<\/script>' web/index.html
+    #       cat web/index.html
 
     - name: 웹 빌드 - HTML
       run: |
@@ -83,9 +83,15 @@ jobs:
             --release \
             --base-href "/${{ github.event.repository.name }}/html/" \
             --output ../build-html_output
-
     
-        # 빌드 결과 병합
+    - name: Debug build output
+      run: |
+        echo "HTML build content"
+        find build-html_output -ls
+        echo "CanvasKit build content"
+        find build-canvaskit_output -ls
+    
+    # 빌드 결과 병합
     - name: Merge builds
       working-directory: ${{ github.workspace }}
       run: |
@@ -94,11 +100,18 @@ jobs:
           mkdir -p site_output/html site_output/canvaskit
           
           echo "Contents of build directory before move:" 
-          mv build-html_output/* site_output/html/ 
+          mv build-html_output/* site_output/html/
+          cp -RL build-html_output/. site_output/html/
           mv build-canvaskit_output/* site_output/canvaskit/
+          cp -RL build-canvaskit_output/. site_output/canvaskit/
+
+          echo "Applying HTML renderer config to site_output/html/index.html..."
+          sed -i '/<head>/a <script type="text/javascript">window.flutterWebRenderer = "html";<\/script>' site_output/html/index.html
+          echo "Modified site_output/html/index.html content (first 20 lines):"
+          head -n 20 site_output/html/index.html
 
           echo '<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0; url=./html/"></head><body>Redirecting to HTML version...</body></html>' > site_output/index.html
-
+          
           echo 'Combined artifact structure in site_output (DEBUG):'
           ls -R site_output
 
