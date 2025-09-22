@@ -20,9 +20,9 @@ jobs:
     runs-on: ubuntu-latest
     
     # 작업 수행 디렉토리 지정
-    defaults:
-      run:
-        working-directory: portfolio
+    # defaults:
+    #   run:
+    #     working-directory: portfolio
 
     steps:
     # 코드 체크아웃
@@ -34,6 +34,7 @@ jobs:
       with:
         flutter-version: '3.35.2'
         channel: 'stable'
+        cache: false
     
     # Flutter 버전 확인 (디버깅용)
     - name: Flutter 버전 확인
@@ -118,6 +119,14 @@ jobs:
 
           echo 'Combined artifact structure in site_output (DEBUG):'
           ls -R site_output
+
+    - name: Debug site_output contents
+      run: |
+        echo "=== site_output 구조 ==="
+        find site_output -maxdepth 3 -print
+        echo
+        echo "파일/디렉토리 상세 정보"
+        ls -lR site_output
 
     # 아티팩트 업로드 (선택적)
     - name: Upload GitHub Pages artifact
