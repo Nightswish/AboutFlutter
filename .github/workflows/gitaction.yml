@@ -37,10 +37,12 @@ jobs:
     
     # Flutter 버전 확인 (디버깅용)
     - name: Flutter 버전 확인
+      working-directory: portfolio # ✨ working-directory 명시
       run: flutter --version
 
     # 의존성 설치
     - name: 의존성 다운로드
+      working-directory: portfolio # ✨ working-directory 명시
       run: flutter pub get
     
     # 코드 정적 분석
@@ -49,6 +51,7 @@ jobs:
     
     # 포맷팅 검사
     - name: 코드 포맷팅 검사
+      working-directory: portfolio # ✨ working-directory 명시
       run: dart format --set-exit-if-changed lib || true
     
     # 테스트 실행
@@ -56,13 +59,14 @@ jobs:
 #      run: flutter test
     
     # 웹 빌드 - CanvasKit
-    - name: Build Web - CanvasKit 
+    - name: Build Web - CanvasKit
+      working-directory: portfolio # ✨ working-directory 명시
       run: |
         echo "Building CanvasKit renderer..."
           flutter build web \
             --release \
             --base-href "/${{ github.event.repository.name }}/canvaskit/" \
-            --output build-canvaskit
+            --output ../build-canvaskit_output
 
     # 웹 빌드 - HTML
     - name: Setup HTML renderer configuration # index.html 파일 수정하여 HTML 렌더러 사용 설정
@@ -71,6 +75,7 @@ jobs:
         # sed 명령어는 `<head>` 태그 바로 뒤에 스크립트를 삽입합니다.
         # 만약 index.html 구조가 달라 에러가 나면 수동으로 파일을 수정하거나
         # 별도의 'index_html.html' 파일을 준비하여 복사하는 방법을 사용할 수 있습니다.
+      working-directory: portfolio # ✨ working-directory 명시
       run: |
           echo "Setting HTML renderer for index.html..."
           sed -i '/<head>/a <script type="text/javascript">window.flutterWebRenderer = "html";<\/script>' web/index.html
@@ -81,36 +86,32 @@ jobs:
           flutter build web \
             --release \
             --base-href "/${{ github.event.repository.name }}/html/" \
-            --output build-html
+            --output ../build-html_output
 
     
         # 빌드 결과 병합
     - name: Merge builds
+      working-directory: portfolio # ✨ working-directory 명시
       run: |
-          echo "Current working directory for merge: $(pwd)" # ✨ 현재 작업 디렉토리 확인
-          rm -rf _site 
-          mkdir -p _site/html _site/canvaskit
+          echo "Current working directory for merge: $(pwd)" 
+          rm -rf site_output
+          mkdir -p site_output/html site_output/canvaskit
           
-          echo "Contents of build-html directory before move:" # ✨ build-html 폴더 내용 확인
-          ls -R build-html
-          echo "Moving build-html to _site/html..."
-          mv build-html/* _site/html/ # ✨ 와일드카드 * 가 문제일 수도 있으니 디버깅해 봄
+          echo "Contents of build directory before move:" 
+          mv build-html_output/* site_output/html/ 
+          mv build-canvaskit_output/* site_output/canvaskit/
 
-          echo "Contents of build-canvaskit directory before move:" # ✨ build-canvaskit 폴더 내용 확인
-          ls -R build-canvaskit
-          echo "Moving build-canvaskit to _site/canvaskit..."
-          mv build-canvaskit/* _site/canvaskit/ # ✨ 와일드카드 * 가 문제일 수도 있으니 디버깅해 봄
+          echo '<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0; url=./html/"></head><body>Redirecting to HTML version...</body></html>' > site_output/index.html
 
-          echo '<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0; url=./html/"></head><body>Redirecting to HTML version...</body></html>' > _site/index.html
-          echo 'Combined artifact structure in _site (DEBUG):'
-          ls -R _site # ✨ 이젠 여기에 파일 목록 확인
+          echo 'Combined artifact structure in site_output (DEBUG):'
+          ls -R site_output
 
     # 아티팩트 업로드 (선택적)
     - name: Upload GitHub Pages artifact
       uses: actions/upload-artifact@v4
       with:
         name: 'github-pages'
-        path: 'portfolio/_site'
+        path: './site_output'
 
   # CD - Github Pages 
   deploy:
