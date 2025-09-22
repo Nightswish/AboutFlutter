@@ -37,12 +37,10 @@ jobs:
     
     # Flutter 버전 확인 (디버깅용)
     - name: Flutter 버전 확인
-      working-directory: portfolio # ✨ working-directory 명시
       run: flutter --version
 
     # 의존성 설치
     - name: 의존성 다운로드
-      working-directory: portfolio # ✨ working-directory 명시
       run: flutter pub get
     
     # 코드 정적 분석
@@ -51,7 +49,6 @@ jobs:
     
     # 포맷팅 검사
     - name: 코드 포맷팅 검사
-      working-directory: portfolio # ✨ working-directory 명시
       run: dart format --set-exit-if-changed lib || true
     
     # 테스트 실행
@@ -60,7 +57,6 @@ jobs:
     
     # 웹 빌드 - CanvasKit
     - name: Build Web - CanvasKit
-      working-directory: portfolio # ✨ working-directory 명시
       run: |
         echo "Building CanvasKit renderer..."
           flutter build web \
@@ -69,13 +65,13 @@ jobs:
             --output ../build-canvaskit_output
 
     # 웹 빌드 - HTML
-    - name: Setup HTML renderer configuration # index.html 파일 수정하여 HTML 렌더러 사용 설정
-        # 💡 이 부분이 중요해! --web-renderer 옵션 대신 index.html 파일을 수정하는 방식!
-        # 기존 index.html에 <script> 태그를 추가하여 HTML 렌더러를 강제합니다.
-        # sed 명령어는 `<head>` 태그 바로 뒤에 스크립트를 삽입합니다.
-        # 만약 index.html 구조가 달라 에러가 나면 수동으로 파일을 수정하거나
-        # 별도의 'index_html.html' 파일을 준비하여 복사하는 방법을 사용할 수 있습니다.
-      working-directory: portfolio # ✨ working-directory 명시
+    # index.html 파일 수정하여 HTML 렌더러 사용 설정
+    # 💡 이 부분이 중요해! --web-renderer 옵션 대신 index.html 파일을 수정하는 방식!
+    # 기존 index.html에 <script> 태그를 추가하여 HTML 렌더러를 강제합니다.
+    # sed 명령어는 `<head>` 태그 바로 뒤에 스크립트를 삽입합니다.
+    # 만약 index.html 구조가 달라 에러가 나면 수동으로 파일을 수정하거나
+    # 별도의 'index_html.html' 파일을 준비하여 복사하는 방법을 사용할 수 있습니다.
+    - name: Setup HTML renderer configuration 
       run: |
           echo "Setting HTML renderer for index.html..."
           sed -i '/<head>/a <script type="text/javascript">window.flutterWebRenderer = "html";<\/script>' web/index.html
