@@ -91,6 +91,7 @@ jobs:
         find build-html_output -ls
         echo "CanvasKit build content"
         find build-canvaskit_output -ls
+        echo "Check the symlink "
     
     # 빌드 결과 병합
     - name: Merge builds
@@ -101,9 +102,9 @@ jobs:
           mkdir -p site_output/html site_output/canvaskit
           
           echo "Copying build-html_output to site_output/html..."
-          cp -RL build-html_output/. site_output/html/ 
+          rsync -av --copy-links build-html_output/ site_output/html/
           echo "Copying build-canvaskit_output to site_output/canvaskit..."
-          cp -RL build-canvaskit_output/. site_output/canvaskit/
+          rsync -av --copy-links build-canvaskit_output/ site_output/canvaskit/
 
           echo "Applying HTML renderer config to site_output/html/index.html..."
           sed -i '/<head>/a <script type="text/javascript">window.flutterWebRenderer = "html";<\/script>' site_output/html/index.html
@@ -112,6 +113,9 @@ jobs:
 
           echo '<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0; url=./html/"></head><body>Redirecting to HTML version...</body></html>' > site_output/index.html
 
+          echo 'Checking for symlinks (must be empty):'
+          find site_output -type l -ls || true
+          
           echo 'Combined artifact structure in site_output (DEBUG):'
           ls -R site_output
 
