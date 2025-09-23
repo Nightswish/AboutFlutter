@@ -117,7 +117,7 @@ AboutFlutter
 │  │  │  └─ utils
 │  │  │     ├─ logger.dart
 │  │  │     ├─ web_utils_stub.dart
-│  │  │     └─ web_utils_web.dart.dart
+│  │  │     └─ web_utils_web.dart
 │  │  ├─ features
 │  │  │  └─ landing
 │  │  │     ├─ pages
@@ -250,7 +250,6 @@ AboutFlutter
 │  ├─ pubspec.yaml
 │  ├─ README.md
 │  ├─ test
-│  │  └─ widget_test.dart
 │  ├─ web
 │  │  ├─ favicon.png
 │  │  ├─ icons
