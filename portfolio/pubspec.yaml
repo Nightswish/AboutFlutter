@@ -69,6 +69,10 @@ dependencies:
   # 테마 저장 등 간단한 로컬 영속성
   shared_preferences: ^2.2.0
 
+  # Firebase Firestore
+  cloud_firestore: ^5.0.0
+  firebase_core: ^3.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
