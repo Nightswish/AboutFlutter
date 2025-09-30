@@ -51,7 +51,9 @@ class _FadeInState extends State<FadeIn> with SingleTickerProviderStateMixin {
         if (widget.delay == Duration.zero) {
           _ctrl.forward();
         } else {
-          Future.delayed(widget.delay, () { if (mounted) _ctrl.forward(); });
+          Future.delayed(widget.delay, () {
+            if (mounted) _ctrl.forward();
+          });
         }
       }
     });
@@ -99,8 +101,10 @@ class _SlideUpState extends State<SlideUp> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     _ctrl = AnimationController(vsync: this, duration: widget.duration);
-    _anim = Tween<Offset>(begin: Offset(0, widget.offsetY), end: Offset.zero)
-        .animate(CurvedAnimation(parent: _ctrl, curve: widget.curve));
+    _anim = Tween<Offset>(
+      begin: Offset(0, widget.offsetY),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _ctrl, curve: widget.curve));
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
@@ -111,7 +115,9 @@ class _SlideUpState extends State<SlideUp> with SingleTickerProviderStateMixin {
         if (widget.delay == Duration.zero) {
           _ctrl.forward();
         } else {
-          Future.delayed(widget.delay, () { if (mounted) _ctrl.forward(); });
+          Future.delayed(widget.delay, () {
+            if (mounted) _ctrl.forward();
+          });
         }
       }
     });
@@ -166,41 +172,124 @@ class FadeSlide extends StatelessWidget {
   }
 }
 
-/// StaggeredEntrance: takes a list of children and applies incremental delays.
-/// Usage: StaggeredEntrance(children: myChildren, initialDelay: 0ms, stepDelay: 80ms)
+/// StaggeredEntrance 위젯
+/// - child (단일 위젯) 또는 children (여러 위젯)을 받아서 순차적으로 애니메이션 적용
+/// - index 값과 interval(간격)을 이용해 각 아이템에 다른 delay(지연 시간) 부여
 class StaggeredEntrance extends StatelessWidget {
-  final List<Widget> children;
-  final Duration initialDelay;
-  final Duration stepDelay;
-  final Duration duration;
-  final Curve curve;
+  final int index; // 몇 번째 아이템인지 (리스트/그리드에서 위치)
+  final List<Widget>? children; // 여러 위젯을 동시에 넘길 때
+  final Widget? child; // 단일 위젯만 넘길 때
+  final Duration baseDelay; // 첫 시작 지연 시간
+  final Duration interval; // 각 위젯 사이의 간격
+  final Duration duration; // 개별 애니메이션 실행 시간
+  final Curve curve; // 애니메이션 곡선
 
   const StaggeredEntrance({
     super.key,
-    required this.children,
-    this.initialDelay = Duration.zero,
-    this.stepDelay = const Duration(milliseconds: 80),
+    required this.index,
+    this.children,
+    this.child,
+    this.baseDelay = const Duration(milliseconds: 200),
+    this.interval = const Duration(milliseconds: 100),
     this.duration = kEntranceDuration,
     this.curve = kEntranceCurve,
-  });
+  }) : assert(
+         children != null || child != null,
+         'child 또는 children 중 하나는 반드시 제공해야 합니다.',
+       );
 
   @override
   Widget build(BuildContext context) {
-    if (MediaQuery.of(context).disableAnimations) {
-      // 애니메이션 비활성화 시: 그냥 children 나열
-      return Column(children: children);
-    }
+    // child와 children을 통일해서 리스트로 다루기
+    final widgets = children ?? [child!];
 
     return Column(
-      children: [
-        for (var i = 0; i < children.length; i++)
-          FadeSlide(
-            delay: initialDelay + stepDelay * i,
-            duration: duration,
-            curve: curve,
-            child: children[i],
-          )
-      ],
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: List.generate(widgets.length, (i) {
+        // index와 i(내부 순번)를 기반으로 딜레이 계산
+        final delay =
+            baseDelay +
+            Duration(milliseconds: interval.inMilliseconds * (index + i));
+
+        // 개별 아이템을 _StaggeredItem 위젯으로 감싸서 애니메이션 적용
+        return _StaggeredItem(
+          child: widgets[i],
+          delay: delay,
+          duration: duration,
+          curve: curve,
+        );
+      }),
+    );
+  }
+}
+
+/// 실제로 개별 아이템에 애니메이션을 적용하는 StatefulWidget
+class _StaggeredItem extends StatefulWidget {
+  final Widget child; // 애니메이션 적용할 위젯
+  final Duration delay; // 시작 지연 시간
+  final Duration duration; // 실행 시간
+  final Curve curve; // 곡선
+
+  const _StaggeredItem({
+    required this.child,
+    required this.delay,
+    required this.duration,
+    required this.curve,
+  });
+
+  @override
+  State<_StaggeredItem> createState() => _StaggeredItemState();
+}
+
+class _StaggeredItemState extends State<_StaggeredItem>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _ctrl; // 애니메이션 컨트롤러
+  late final Animation<double> _fade; // 투명도 애니메이션
+  late final Animation<Offset> _slide; // 슬라이드 애니메이션
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(vsync: this, duration: widget.duration);
+
+    // 곡선을 적용한 CurvedAnimation
+    final curved = CurvedAnimation(parent: _ctrl, curve: widget.curve);
+    // 페이드(0 → 1)
+    _fade = Tween<double>(begin: 0.0, end: 1.0).animate(curved);
+    // 슬라이드 (아래에서 위로 올라오는 효과)
+    _slide = Tween<Offset>(
+      begin: const Offset(0, 0.18), // 살짝 아래에서 시작
+      end: Offset.zero, // 제자리로
+    ).animate(curved);
+
+    // 첫 빌드가 끝난 후에 delay를 적용하여 애니메이션 실행
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+
+      // 접근성 설정 확인: 애니메이션 비활성화 시 즉시 표시
+      final disable = MediaQuery.of(context).disableAnimations;
+      if (disable) {
+        _ctrl.value = 1.0;
+      } else {
+        Future.delayed(widget.delay, () {
+          if (mounted) _ctrl.forward();
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Fade + Slide 조합으로 위젯을 감싸서 리턴
+    return FadeTransition(
+      opacity: _fade,
+      child: SlideTransition(position: _slide, child: widget.child),
     );
   }
 }
