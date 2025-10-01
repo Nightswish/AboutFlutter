@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
-
+import 'package:portfolio/shared/animations/entrance_animations.dart';
+import 'package:portfolio/shared/animations/hover_animations.dart';
 // 상대 경로: shared/widgets 에서 core/responsive.dart 로 올라가려면 ../../ 로 올라감
 import '../../presentation/responsive.dart';
-import '../animations/entrance_animations.dart';
-import '../animations/hover_animations.dart';
 
 /// HeroSection: 랜딩 페이지 상단에 위치하는 핵심 섹션
 /// 특징 요약
 /// 1. 전체 FadeSlide 진입 애니메이션 → HeroSection이 화면에 들어올 때 자연스럽게 등장
 /// 2. 타이틀 → FadeSlide + 반응형 폰트 (Responsive.fontSize) + 그림자 효과
 /// 3. 부제 (Subtitle) → FadeIn으로 살짝 지연 후 등장
-/// 4. 버튼 → HoverElevatedButton 사용 → 
+/// 4. 버튼 → HoverElevatedButton 사용 →
 ///     웹/데스크탑 → hover 시 scale + shadow 효과
 ///     모바일 → 터치 시 press 효과
 /// 5. 레이아웃 →
@@ -35,7 +34,12 @@ class HeroSection extends StatelessWidget {
       delay: const Duration(milliseconds: 100),
       child: Container(
         // 히어로 섹션 전용 배경 (그라데이션) — 필요하면 이미지/비디오로 교체 가능
-        padding: Responsive.edgeInsetsAll(context, mobile: 16, tablet: 24, desktop: 48),
+        padding: Responsive.edgeInsetsAll(
+          context,
+          mobile: 16,
+          tablet: 24,
+          desktop: 48,
+        ),
         decoration: BoxDecoration(
           gradient: const LinearGradient(
             colors: [Color(0xFF4F46E5), Color(0xFF6366F1)], // 보라 계열 그라데이션
@@ -46,7 +50,9 @@ class HeroSection extends StatelessWidget {
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: isDesktop ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+          crossAxisAlignment: isDesktop
+              ? CrossAxisAlignment.start
+              : CrossAxisAlignment.center,
           children: [
             // Title: FadeSlide를 재사용해 타이틀만 따로 애니메이션 줄 수도 있음
             FadeSlide(
@@ -56,17 +62,33 @@ class HeroSection extends StatelessWidget {
                 textAlign: isDesktop ? TextAlign.left : TextAlign.center,
                 style: GoogleFonts.poppins(
                   // Responsive.fontSize는 MediaQuery.textScaleFactor(접근성)까지 반영
-                  fontSize: Responsive.fontSize(context: context, mobile: 28, tablet: 36, desktop: 48),
+                  fontSize: Responsive.fontSize(
+                    context: context,
+                    mobile: 28,
+                    tablet: 36,
+                    desktop: 48,
+                  ),
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                   shadows: [
-                    Shadow(blurRadius: 10, color: Colors.black.withOpacity(0.3), offset: const Offset(2, 2)),
+                    Shadow(
+                      blurRadius: 10,
+                      color: Colors.black.withOpacity(0.3),
+                      offset: const Offset(2, 2),
+                    ),
                   ],
                 ),
               ),
             ),
 
-            SizedBox(height: Responsive.value(context: context, mobile: 12, tablet: 16, desktop: 20)),
+            SizedBox(
+              height: Responsive.value(
+                context: context,
+                mobile: 12,
+                tablet: 16,
+                desktop: 20,
+              ),
+            ),
 
             // Subtitle
             FadeIn(
@@ -75,25 +97,46 @@ class HeroSection extends StatelessWidget {
                 "Flutter로 반응형 웹/앱을 만들고, 깔끔한 UI와 퍼포먼스를 중요시합니다.",
                 textAlign: isDesktop ? TextAlign.left : TextAlign.center,
                 style: TextStyle(
-                  fontSize: Responsive.fontSize(context: context, mobile: 14, tablet: 16, desktop: 18),
+                  fontSize: Responsive.fontSize(
+                    context: context,
+                    mobile: 14,
+                    tablet: 16,
+                    desktop: 18,
+                  ),
                   color: Colors.white70,
                 ),
               ),
             ),
 
-            SizedBox(height: Responsive.value(context: context, mobile: 16, tablet: 24, desktop: 32)),
+            SizedBox(
+              height: Responsive.value(
+                context: context,
+                mobile: 16,
+                tablet: 24,
+                desktop: 32,
+              ),
+            ),
 
             // CTA 버튼 그룹 (데스크탑: 가로, 모바일: 세로)
             Flex(
               direction: isDesktop ? Axis.horizontal : Axis.vertical,
-              mainAxisAlignment: isDesktop ? MainAxisAlignment.start : MainAxisAlignment.center,
+              mainAxisAlignment: isDesktop
+                  ? MainAxisAlignment.start
+                  : MainAxisAlignment.center,
               children: [
                 // primary CTA (hover 가능)
                 HoverElevatedButton(
                   onPressed: () => GoRouter.of(context).go('/render'),
                   child: Text(
                     "체험해보기",
-                    style: TextStyle(fontSize: Responsive.fontSize(context: context, mobile: 14, tablet: 16, desktop: 18)),
+                    style: TextStyle(
+                      fontSize: Responsive.fontSize(
+                        context: context,
+                        mobile: 14,
+                        tablet: 16,
+                        desktop: 18,
+                      ),
+                    ),
                   ),
                 ),
 
@@ -104,7 +147,14 @@ class HeroSection extends StatelessWidget {
                   onPressed: () => GoRouter.of(context).go('/privacy'),
                   child: Text(
                     "자세히 보기",
-                    style: TextStyle(fontSize: Responsive.fontSize(context: context, mobile: 14, tablet: 16, desktop: 18)),
+                    style: TextStyle(
+                      fontSize: Responsive.fontSize(
+                        context: context,
+                        mobile: 14,
+                        tablet: 16,
+                        desktop: 18,
+                      ),
+                    ),
                   ),
                 ),
               ],

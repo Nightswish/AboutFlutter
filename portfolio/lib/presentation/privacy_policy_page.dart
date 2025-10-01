@@ -1,9 +1,9 @@
 // lib/presentation/privacy_policy_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../core/providers/projects_provider.dart';
-import '../../shared/widgets/projects_grid.dart';
-import '../shared/animations/entrance_animations.dart';
+import 'package:portfolio/core/providers/projects_provider.dart';
+import 'package:portfolio/shared/widgets/projects_grid.dart';
+import 'package:portfolio/shared/animations/entrance_animations.dart';
 
 class PrivacyPolicyPage extends ConsumerWidget {
   const PrivacyPolicyPage({super.key});
