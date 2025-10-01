@@ -178,19 +178,6 @@ class HomePage extends ConsumerWidget {
   // }
 }
 
-class PrivacyPolicyPage extends StatelessWidget {
-  const PrivacyPolicyPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text('Privacy Policy Page'),
-      ), // 화면 중앙에 'Privacy Policy Page' 텍스트를 보여줌
-    );
-  }
-}
-
 class TermsPage extends StatelessWidget {
   const TermsPage({super.key});
 
