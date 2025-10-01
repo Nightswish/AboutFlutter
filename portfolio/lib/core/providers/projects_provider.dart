@@ -10,7 +10,6 @@ enum DataSource { rest, firestore }
 /// 현재 선택된 데이터 소스 (기본값: REST)
 final dataSourceProvider = StateProvider<DataSource>((ref) => DataSource.rest);
 
-
 /// ProjectsNotifier: 비동기 리스트를 관리 (로딩/데이터/에러 상태를 AsyncValue로 표현)
 class ProjectsNotifier extends StateNotifier<AsyncValue<List<Project>>> {
   final Ref ref;
@@ -19,6 +18,7 @@ class ProjectsNotifier extends StateNotifier<AsyncValue<List<Project>>> {
     fetchProjects();
   }
 
+  /// 데이터 불러오기 (REST ↔ Firestore 구분)
   Future<void> fetchProjects() async {
     final source = ref.read(dataSourceProvider);
     try {
@@ -40,33 +40,41 @@ class ProjectsNotifier extends StateNotifier<AsyncValue<List<Project>>> {
       // );
       // state = AsyncValue.data(list);
 
+      state = const AsyncValue.loading();
+      List<Project> list;
+
       if (source == DataSource.rest) {
         // ✅ REST API
-        final res = await http.get(Uri.parse('https://api.example.com/projects'));
-        if (res.statusCode == 200) {
-          final List<dynamic> data = json.decode(res.body);
-          final list = data.map((e) => Project.fromJson(e)).toList();
-          state = AsyncValue.data(list);
+        final response = await http.get(
+          Uri.parse("https://example.com/projects.json"),
+        );
+        if (response.statusCode == 200) {
+          final data = jsonDecode(response.body) as List;
+          list = data.map((e) => Project.fromJson(e)).toList();
         } else {
-          throw Exception("API error: ${res.statusCode}");
+          throw Exception("REST API 호출 실패 (${response.statusCode})");
         }
       } else {
         // ✅ Firestore
-        final snapshot =
-            await FirebaseFirestore.instance.collection('projects').get();
-        final list =
-            snapshot.docs.map((doc) => Project.fromJson(doc.data())).toList();
-        state = AsyncValue.data(list);
+        final snapshot = await FirebaseFirestore.instance
+            .collection("projects")
+            .get();
+        list = snapshot.docs
+            .map((doc) => Project.fromFirestore(doc.data(), doc.id))
+            .toList();
       }
+
+      state = AsyncValue.data(list);
     } catch (e, st) {
       state = AsyncValue.error(e, st);
     }
   }
 
+  /// 새로고침
   Future<void> refresh() async => fetchProjects();
 }
 
-/// Provider
+/// Provider 등록
 final projectsProvider =
     StateNotifierProvider<ProjectsNotifier, AsyncValue<List<Project>>>(
       // (ref) {  return ProjectsNotifier();}

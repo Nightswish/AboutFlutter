@@ -17,6 +17,7 @@ class Project {
     this.tags = const [],
   });
 
+  // REST API JSON → Dart 객체
   factory Project.fromJson(Map<String, dynamic> json) {
     return Project(
       id: json['id'] ?? '',
@@ -26,6 +27,26 @@ class Project {
       githubUrl: json['githubUrl'],
       demoUrl: json['demoUrl'],
       tags: List<String>.from(json['tags'] ?? []),
+    );
+  }
+
+  // Dart 객체 → JSON (Firestore, REST POST용)
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'description': description,
+      'imageUrl': imageUrl,
+    };
+  }
+
+  // Firestore DocumentSnapshot → Dart 객체
+  factory Project.fromFirestore(Map<String, dynamic> doc, String id) {
+    return Project(
+      id: id,
+      title: doc['title'] as String,
+      description: doc['description'] as String,
+      imageUrl: doc['imageUrl'] as String? ?? '',
     );
   }
 }
