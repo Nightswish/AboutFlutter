@@ -73,6 +73,8 @@ dependencies:
   cloud_firestore: ^5.0.0
   firebase_core: ^3.0.0
 
+  url_launcher: ^6.3.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -117,12 +119,12 @@ flutter:
   # 웹 폰트 설정 (Pretendard)
     - family: Pretendard
       fonts:
-        - asset: assets/fonts/Pretendard-Regular.woff2
-        - asset: assets/fonts/Pretendard-Medium.woff2
+        - asset: assets/fonts/Pretendard-Regular.ttf
+        - asset: assets/fonts/Pretendard-Medium.ttf
           weight: 500
-        - asset: assets/fonts/Pretendard-SemiBold.woff2
+        - asset: assets/fonts/Pretendard-SemiBold.ttf
           weight: 600
-        - asset: assets/fonts/Pretendard-Bold.woff2
+        - asset: assets/fonts/Pretendard-Bold.ttf
           weight: 700
   #   - family: Schyler
   #     fonts:
