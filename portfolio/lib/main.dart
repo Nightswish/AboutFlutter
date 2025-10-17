@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod
 import 'core/providers/theme_provider.dart';
 import 'package:portfolio/presentation/privacy_policy_page.dart'; // api 모델
 import 'package:portfolio/presentation/homepage.dart';
+import 'package:portfolio/presentation/web_main.dart';
 
 // 조건부 임포트: 웹일 때는 web_utils_web.dart, 아니면 web_utils_stub.dart
 import 'core/utils/web_utils_stub.dart'
@@ -41,7 +42,7 @@ class PortfolioApp extends ConsumerWidget {
           // 개별 경로 정의
           path: '/', // 루트 경로 ('/'는 앱의 첫 화면을 의미)
           builder: (context, state) =>
-              const HomePage(), // 이 경로로 가면 HomePage 위젯을 보여줌
+              const WebMain(), // 이 경로로 가면 HomePage 위젯을 보여줌
         ),
         GoRoute(
           path: '/privacy', // '/privacy' 경로로 가면

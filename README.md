@@ -124,6 +124,8 @@ AboutFlutter
 │  │  │     └─ widgets
 │  │  ├─ main.dart
 │  │  ├─ presentation
+│  │  │  ├─ homepage.dart
+│  │  │  ├─ privacy_policy_page.dart
 │  │  │  └─ responsive.dart
 │  │  └─ shared
 │  │     ├─ animations
@@ -133,7 +135,8 @@ AboutFlutter
 │  │     └─ widgets
 │  │        ├─ buttons
 │  │        ├─ hero_section.dart
-│  │        └─ layouts
+│  │        ├─ layouts
+│  │        └─ projects_grid.dart
 │  ├─ linux
 │  │  ├─ CMakeLists.txt
 │  │  ├─ flutter
@@ -254,13 +257,571 @@ AboutFlutter
 │  │  ├─ favicon.png
 │  │  ├─ icons
 │  │  ├─ index.html
-│  │  └─ manifest.json
+│  │  ├─ manifest.json
+│  │  ├─ robots.txt
+│  │  └─ sitemap.xml
 │  └─ windows
 │     ├─ CMakeLists.txt
 │     ├─ flutter
 │     │  ├─ CMakeLists.txt
 │     │  ├─ ephemeral
 │     │  │  └─ .plugin_symlinks
+│     │  │     ├─ cloud_firestore
+│     │  │     │  ├─ android
+│     │  │     │  │  └─ src
+│     │  │     │  │     └─ main
+│     │  │     │  │        ├─ AndroidManifest.xml
+│     │  │     │  │        └─ java
+│     │  │     │  │           └─ io
+│     │  │     │  │              └─ flutter
+│     │  │     │  │                 └─ plugins
+│     │  │     │  │                    └─ firebase
+│     │  │     │  │                       └─ firestore
+│     │  │     │  │                          ├─ FlutterFirebaseFirestoreException.java
+│     │  │     │  │                          ├─ FlutterFirebaseFirestoreExtension.java
+│     │  │     │  │                          ├─ FlutterFirebaseFirestoreMessageCodec.java
+│     │  │     │  │                          ├─ FlutterFirebaseFirestorePlugin.java
+│     │  │     │  │                          ├─ FlutterFirebaseFirestoreRegistrar.java
+│     │  │     │  │                          ├─ FlutterFirebaseFirestoreTransactionResult.java
+│     │  │     │  │                          ├─ GeneratedAndroidFirebaseFirestore.java
+│     │  │     │  │                          ├─ streamhandler
+│     │  │     │  │                          │  ├─ DocumentSnapshotsStreamHandler.java
+│     │  │     │  │                          │  ├─ LoadBundleStreamHandler.java
+│     │  │     │  │                          │  ├─ OnTransactionResultListener.java
+│     │  │     │  │                          │  ├─ QuerySnapshotsStreamHandler.java
+│     │  │     │  │                          │  ├─ SnapshotsInSyncStreamHandler.java
+│     │  │     │  │                          │  └─ TransactionStreamHandler.java
+│     │  │     │  │                          └─ utils
+│     │  │     │  │                             ├─ ExceptionConverter.java
+│     │  │     │  │                             ├─ PigeonParser.java
+│     │  │     │  │                             └─ ServerTimestampBehaviorConverter.java
+│     │  │     │  ├─ CHANGELOG.md
+│     │  │     │  ├─ dartpad
+│     │  │     │  │  ├─ dartpad_metadata.yaml
+│     │  │     │  │  └─ lib
+│     │  │     │  │     └─ main.dart
+│     │  │     │  ├─ example
+│     │  │     │  │  ├─ analysis_options.yaml
+│     │  │     │  │  ├─ android
+│     │  │     │  │  │  ├─ app
+│     │  │     │  │  │  │  ├─ google-services.json
+│     │  │     │  │  │  │  └─ src
+│     │  │     │  │  │  │     ├─ debug
+│     │  │     │  │  │  │     │  └─ AndroidManifest.xml
+│     │  │     │  │  │  │     ├─ main
+│     │  │     │  │  │  │     │  ├─ AndroidManifest.xml
+│     │  │     │  │  │  │     │  ├─ java
+│     │  │     │  │  │  │     │  │  └─ io
+│     │  │     │  │  │  │     │  │     └─ flutter
+│     │  │     │  │  │  │     │  │        └─ plugins
+│     │  │     │  │  │  │     │  ├─ kotlin
+│     │  │     │  │  │  │     │  │  └─ io
+│     │  │     │  │  │  │     │  │     └─ flutter
+│     │  │     │  │  │  │     │  │        └─ plugins
+│     │  │     │  │  │  │     │  │           └─ firebase
+│     │  │     │  │  │  │     │  │              └─ firestore
+│     │  │     │  │  │  │     │  │                 └─ example
+│     │  │     │  │  │  │     │  │                    └─ MainActivity.kt
+│     │  │     │  │  │  │     │  └─ res
+│     │  │     │  │  │  │     │     ├─ drawable
+│     │  │     │  │  │  │     │     │  └─ launch_background.xml
+│     │  │     │  │  │  │     │     ├─ drawable-v21
+│     │  │     │  │  │  │     │     │  └─ launch_background.xml
+│     │  │     │  │  │  │     │     ├─ mipmap-hdpi
+│     │  │     │  │  │  │     │     │  └─ ic_launcher.png
+│     │  │     │  │  │  │     │     ├─ mipmap-mdpi
+│     │  │     │  │  │  │     │     │  └─ ic_launcher.png
+│     │  │     │  │  │  │     │     ├─ mipmap-xhdpi
+│     │  │     │  │  │  │     │     │  └─ ic_launcher.png
+│     │  │     │  │  │  │     │     ├─ mipmap-xxhdpi
+│     │  │     │  │  │  │     │     │  └─ ic_launcher.png
+│     │  │     │  │  │  │     │     ├─ mipmap-xxxhdpi
+│     │  │     │  │  │  │     │     │  └─ ic_launcher.png
+│     │  │     │  │  │  │     │     ├─ values
+│     │  │     │  │  │  │     │     │  └─ styles.xml
+│     │  │     │  │  │  │     │     └─ values-night
+│     │  │     │  │  │  │     │        └─ styles.xml
+│     │  │     │  │  │  │     └─ profile
+│     │  │     │  │  │  │        └─ AndroidManifest.xml
+│     │  │     │  │  │  ├─ gradle
+│     │  │     │  │  │  │  └─ wrapper
+│     │  │     │  │  │  │     └─ gradle-wrapper.properties
+│     │  │     │  │  │  └─ gradle.properties
+│     │  │     │  │  ├─ firebase.json
+│     │  │     │  │  ├─ integration_test
+│     │  │     │  │  │  ├─ collection_reference_e2e.dart
+│     │  │     │  │  │  ├─ document_change_e2e.dart
+│     │  │     │  │  │  ├─ document_reference_e2e.dart
+│     │  │     │  │  │  ├─ e2e_test.dart
+│     │  │     │  │  │  ├─ field_value_e2e.dart
+│     │  │     │  │  │  ├─ firebase_options.dart
+│     │  │     │  │  │  ├─ firebase_options_secondary.dart
+│     │  │     │  │  │  ├─ geo_point_e2e.dart
+│     │  │     │  │  │  ├─ instance_e2e.dart
+│     │  │     │  │  │  ├─ load_bundle_e2e.dart
+│     │  │     │  │  │  ├─ query_e2e.dart
+│     │  │     │  │  │  ├─ second_database.dart
+│     │  │     │  │  │  ├─ settings_e2e.dart
+│     │  │     │  │  │  ├─ snapshot_metadata_e2e.dart
+│     │  │     │  │  │  ├─ timestamp_e2e.dart
+│     │  │     │  │  │  ├─ transaction_e2e.dart
+│     │  │     │  │  │  ├─ vector_value_e2e.dart
+│     │  │     │  │  │  ├─ web_snapshot_listeners.dart
+│     │  │     │  │  │  └─ write_batch_e2e.dart
+│     │  │     │  │  ├─ ios
+│     │  │     │  │  │  ├─ firebase_app_id_file.json
+│     │  │     │  │  │  ├─ Flutter
+│     │  │     │  │  │  │  ├─ AppFrameworkInfo.plist
+│     │  │     │  │  │  │  ├─ Debug.xcconfig
+│     │  │     │  │  │  │  └─ Release.xcconfig
+│     │  │     │  │  │  ├─ Podfile
+│     │  │     │  │  │  ├─ Runner
+│     │  │     │  │  │  │  ├─ AppDelegate.swift
+│     │  │     │  │  │  │  ├─ Assets.xcassets
+│     │  │     │  │  │  │  │  └─ LaunchImage.imageset
+│     │  │     │  │  │  │  │     ├─ Contents.json
+│     │  │     │  │  │  │  │     ├─ LaunchImage.png
+│     │  │     │  │  │  │  │     ├─ LaunchImage@2x.png
+│     │  │     │  │  │  │  │     ├─ LaunchImage@3x.png
+│     │  │     │  │  │  │  │     └─ README.md
+│     │  │     │  │  │  │  ├─ Base.lproj
+│     │  │     │  │  │  │  │  ├─ LaunchScreen.storyboard
+│     │  │     │  │  │  │  │  └─ Main.storyboard
+│     │  │     │  │  │  │  ├─ GoogleService-Info.plist
+│     │  │     │  │  │  │  ├─ Info.plist
+│     │  │     │  │  │  │  └─ Runner-Bridging-Header.h
+│     │  │     │  │  │  ├─ Runner.xcodeproj
+│     │  │     │  │  │  │  ├─ project.pbxproj
+│     │  │     │  │  │  │  ├─ project.xcworkspace
+│     │  │     │  │  │  │  │  ├─ contents.xcworkspacedata
+│     │  │     │  │  │  │  │  └─ xcshareddata
+│     │  │     │  │  │  │  │     ├─ IDEWorkspaceChecks.plist
+│     │  │     │  │  │  │  │     ├─ swiftpm
+│     │  │     │  │  │  │  │     │  └─ configuration
+│     │  │     │  │  │  │  │     └─ WorkspaceSettings.xcsettings
+│     │  │     │  │  │  │  └─ xcshareddata
+│     │  │     │  │  │  │     └─ xcschemes
+│     │  │     │  │  │  │        └─ Runner.xcscheme
+│     │  │     │  │  │  └─ Runner.xcworkspace
+│     │  │     │  │  │     ├─ contents.xcworkspacedata
+│     │  │     │  │  │     └─ xcshareddata
+│     │  │     │  │  │        ├─ IDEWorkspaceChecks.plist
+│     │  │     │  │  │        ├─ swiftpm
+│     │  │     │  │  │        │  └─ configuration
+│     │  │     │  │  │        └─ WorkspaceSettings.xcsettings
+│     │  │     │  │  ├─ lib
+│     │  │     │  │  │  ├─ firebase_options.dart
+│     │  │     │  │  │  └─ main.dart
+│     │  │     │  │  ├─ macos
+│     │  │     │  │  │  ├─ firebase_app_id_file.json
+│     │  │     │  │  │  ├─ Flutter
+│     │  │     │  │  │  │  ├─ Flutter-Debug.xcconfig
+│     │  │     │  │  │  │  └─ Flutter-Release.xcconfig
+│     │  │     │  │  │  ├─ Podfile
+│     │  │     │  │  │  ├─ Runner
+│     │  │     │  │  │  │  ├─ AppDelegate.swift
+│     │  │     │  │  │  │  ├─ Assets.xcassets
+│     │  │     │  │  │  │  ├─ Base.lproj
+│     │  │     │  │  │  │  │  └─ MainMenu.xib
+│     │  │     │  │  │  │  ├─ Configs
+│     │  │     │  │  │  │  │  ├─ AppInfo.xcconfig
+│     │  │     │  │  │  │  │  ├─ Debug.xcconfig
+│     │  │     │  │  │  │  │  ├─ Release.xcconfig
+│     │  │     │  │  │  │  │  └─ Warnings.xcconfig
+│     │  │     │  │  │  │  ├─ DebugProfile.entitlements
+│     │  │     │  │  │  │  ├─ GoogleService-Info.plist
+│     │  │     │  │  │  │  ├─ Info.plist
+│     │  │     │  │  │  │  ├─ MainFlutterWindow.swift
+│     │  │     │  │  │  │  └─ Release.entitlements
+│     │  │     │  │  │  ├─ Runner.xcodeproj
+│     │  │     │  │  │  │  ├─ project.pbxproj
+│     │  │     │  │  │  │  ├─ project.xcworkspace
+│     │  │     │  │  │  │  │  └─ xcshareddata
+│     │  │     │  │  │  │  │     ├─ IDEWorkspaceChecks.plist
+│     │  │     │  │  │  │  │     └─ swiftpm
+│     │  │     │  │  │  │  │        └─ configuration
+│     │  │     │  │  │  │  └─ xcshareddata
+│     │  │     │  │  │  │     └─ xcschemes
+│     │  │     │  │  │  │        └─ Runner.xcscheme
+│     │  │     │  │  │  ├─ Runner.xcworkspace
+│     │  │     │  │  │  │  ├─ contents.xcworkspacedata
+│     │  │     │  │  │  │  └─ xcshareddata
+│     │  │     │  │  │  │     ├─ IDEWorkspaceChecks.plist
+│     │  │     │  │  │  │     └─ swiftpm
+│     │  │     │  │  │  │        └─ configuration
+│     │  │     │  │  │  └─ RunnerTests
+│     │  │     │  │  │     └─ RunnerTests.swift
+│     │  │     │  │  ├─ pubspec.yaml
+│     │  │     │  │  ├─ README.md
+│     │  │     │  │  ├─ test_driver
+│     │  │     │  │  │  └─ integration_test.dart
+│     │  │     │  │  ├─ web
+│     │  │     │  │  │  ├─ favicon.png
+│     │  │     │  │  │  ├─ icons
+│     │  │     │  │  │  ├─ index.html
+│     │  │     │  │  │  ├─ manifest.json
+│     │  │     │  │  │  └─ wasm_index.html
+│     │  │     │  │  └─ windows
+│     │  │     │  │     ├─ CMakeLists.txt
+│     │  │     │  │     ├─ flutter
+│     │  │     │  │     │  └─ CMakeLists.txt
+│     │  │     │  │     └─ runner
+│     │  │     │  │        ├─ CMakeLists.txt
+│     │  │     │  │        ├─ flutter_window.cpp
+│     │  │     │  │        ├─ flutter_window.h
+│     │  │     │  │        ├─ main.cpp
+│     │  │     │  │        ├─ resource.h
+│     │  │     │  │        ├─ resources
+│     │  │     │  │        │  └─ app_icon.ico
+│     │  │     │  │        ├─ runner.exe.manifest
+│     │  │     │  │        ├─ Runner.rc
+│     │  │     │  │        ├─ utils.cpp
+│     │  │     │  │        ├─ utils.h
+│     │  │     │  │        ├─ win32_window.cpp
+│     │  │     │  │        └─ win32_window.h
+│     │  │     │  ├─ ios
+│     │  │     │  │  ├─ cloud_firestore
+│     │  │     │  │  │  ├─ Package.swift
+│     │  │     │  │  │  └─ Sources
+│     │  │     │  │  │     └─ cloud_firestore
+│     │  │     │  │  │        ├─ FirestoreMessages.g.m
+│     │  │     │  │  │        ├─ FirestorePigeonParser.m
+│     │  │     │  │  │        ├─ FLTDocumentSnapshotStreamHandler.m
+│     │  │     │  │  │        ├─ FLTFirebaseFirestoreExtension.m
+│     │  │     │  │  │        ├─ FLTFirebaseFirestorePlugin.m
+│     │  │     │  │  │        ├─ FLTFirebaseFirestoreReader.m
+│     │  │     │  │  │        ├─ FLTFirebaseFirestoreUtils.m
+│     │  │     │  │  │        ├─ FLTFirebaseFirestoreWriter.m
+│     │  │     │  │  │        ├─ FLTLoadBundleStreamHandler.m
+│     │  │     │  │  │        ├─ FLTQuerySnapshotStreamHandler.m
+│     │  │     │  │  │        ├─ FLTSnapshotsInSyncStreamHandler.m
+│     │  │     │  │  │        ├─ FLTTransactionStreamHandler.m
+│     │  │     │  │  │        ├─ include
+│     │  │     │  │  │        │  └─ cloud_firestore
+│     │  │     │  │  │        │     ├─ Private
+│     │  │     │  │  │        │     │  ├─ FirestorePigeonParser.h
+│     │  │     │  │  │        │     │  ├─ FLTDocumentSnapshotStreamHandler.h
+│     │  │     │  │  │        │     │  ├─ FLTFirebaseFirestoreExtension.h
+│     │  │     │  │  │        │     │  ├─ FLTFirebaseFirestoreReader.h
+│     │  │     │  │  │        │     │  ├─ FLTFirebaseFirestoreUtils.h
+│     │  │     │  │  │        │     │  ├─ FLTFirebaseFirestoreWriter.h
+│     │  │     │  │  │        │     │  ├─ FLTLoadBundleStreamHandler.h
+│     │  │     │  │  │        │     │  ├─ FLTQuerySnapshotStreamHandler.h
+│     │  │     │  │  │        │     │  ├─ FLTSnapshotsInSyncStreamHandler.h
+│     │  │     │  │  │        │     │  └─ FLTTransactionStreamHandler.h
+│     │  │     │  │  │        │     └─ Public
+│     │  │     │  │  │        │        ├─ CustomPigeonHeaderFirestore.h
+│     │  │     │  │  │        │        ├─ FirestoreMessages.g.h
+│     │  │     │  │  │        │        └─ FLTFirebaseFirestorePlugin.h
+│     │  │     │  │  │        └─ Resources
+│     │  │     │  │  ├─ cloud_firestore.podspec
+│     │  │     │  │  └─ generated_firebase_sdk_version.txt
+│     │  │     │  ├─ lib
+│     │  │     │  │  ├─ cloud_firestore.dart
+│     │  │     │  │  └─ src
+│     │  │     │  │     ├─ aggregate_query.dart
+│     │  │     │  │     ├─ aggregate_query_snapshot.dart
+│     │  │     │  │     ├─ collection_reference.dart
+│     │  │     │  │     ├─ document_change.dart
+│     │  │     │  │     ├─ document_reference.dart
+│     │  │     │  │     ├─ document_snapshot.dart
+│     │  │     │  │     ├─ field_value.dart
+│     │  │     │  │     ├─ filters.dart
+│     │  │     │  │     ├─ firestore.dart
+│     │  │     │  │     ├─ load_bundle_task.dart
+│     │  │     │  │     ├─ load_bundle_task_snapshot.dart
+│     │  │     │  │     ├─ persistent_cache_index_manager.dart
+│     │  │     │  │     ├─ query.dart
+│     │  │     │  │     ├─ query_document_snapshot.dart
+│     │  │     │  │     ├─ query_snapshot.dart
+│     │  │     │  │     ├─ snapshot_metadata.dart
+│     │  │     │  │     ├─ transaction.dart
+│     │  │     │  │     ├─ utils
+│     │  │     │  │     │  └─ codec_utility.dart
+│     │  │     │  │     └─ write_batch.dart
+│     │  │     │  ├─ LICENSE
+│     │  │     │  ├─ macos
+│     │  │     │  │  ├─ cloud_firestore
+│     │  │     │  │  │  ├─ Package.swift
+│     │  │     │  │  │  └─ Sources
+│     │  │     │  │  │     └─ cloud_firestore
+│     │  │     │  │  │        ├─ FirestoreMessages.g.m
+│     │  │     │  │  │        ├─ FirestorePigeonParser.m
+│     │  │     │  │  │        ├─ FLTDocumentSnapshotStreamHandler.m
+│     │  │     │  │  │        ├─ FLTFirebaseFirestoreExtension.m
+│     │  │     │  │  │        ├─ FLTFirebaseFirestorePlugin.m
+│     │  │     │  │  │        ├─ FLTFirebaseFirestoreReader.m
+│     │  │     │  │  │        ├─ FLTFirebaseFirestoreUtils.m
+│     │  │     │  │  │        ├─ FLTFirebaseFirestoreWriter.m
+│     │  │     │  │  │        ├─ FLTLoadBundleStreamHandler.m
+│     │  │     │  │  │        ├─ FLTQuerySnapshotStreamHandler.m
+│     │  │     │  │  │        ├─ FLTSnapshotsInSyncStreamHandler.m
+│     │  │     │  │  │        ├─ FLTTransactionStreamHandler.m
+│     │  │     │  │  │        ├─ include
+│     │  │     │  │  │        │  └─ cloud_firestore
+│     │  │     │  │  │        │     ├─ Private
+│     │  │     │  │  │        │     │  ├─ FirestorePigeonParser.h
+│     │  │     │  │  │        │     │  ├─ FLTDocumentSnapshotStreamHandler.h
+│     │  │     │  │  │        │     │  ├─ FLTFirebaseFirestoreExtension.h
+│     │  │     │  │  │        │     │  ├─ FLTFirebaseFirestoreReader.h
+│     │  │     │  │  │        │     │  ├─ FLTFirebaseFirestoreUtils.h
+│     │  │     │  │  │        │     │  ├─ FLTFirebaseFirestoreWriter.h
+│     │  │     │  │  │        │     │  ├─ FLTLoadBundleStreamHandler.h
+│     │  │     │  │  │        │     │  ├─ FLTQuerySnapshotStreamHandler.h
+│     │  │     │  │  │        │     │  ├─ FLTSnapshotsInSyncStreamHandler.h
+│     │  │     │  │  │        │     │  └─ FLTTransactionStreamHandler.h
+│     │  │     │  │  │        │     └─ Public
+│     │  │     │  │  │        │        ├─ CustomPigeonHeaderFirestore.h
+│     │  │     │  │  │        │        ├─ FirestoreMessages.g.h
+│     │  │     │  │  │        │        └─ FLTFirebaseFirestorePlugin.h
+│     │  │     │  │  │        └─ Resources
+│     │  │     │  │  └─ cloud_firestore.podspec
+│     │  │     │  ├─ pubspec.yaml
+│     │  │     │  ├─ README.md
+│     │  │     │  ├─ test
+│     │  │     │  │  ├─ cloud_firestore_test.dart
+│     │  │     │  │  ├─ collection_reference_test.dart
+│     │  │     │  │  ├─ field_value_test.dart
+│     │  │     │  │  ├─ mock.dart
+│     │  │     │  │  ├─ query_test.dart
+│     │  │     │  │  └─ test_firestore_message_codec.dart
+│     │  │     │  └─ windows
+│     │  │     │     ├─ cloud_firestore_plugin.cpp
+│     │  │     │     ├─ cloud_firestore_plugin.h
+│     │  │     │     ├─ cloud_firestore_plugin_c_api.cpp
+│     │  │     │     ├─ CMakeLists.txt
+│     │  │     │     ├─ firestore_codec.cpp
+│     │  │     │     ├─ firestore_codec.h
+│     │  │     │     ├─ include
+│     │  │     │     │  └─ cloud_firestore
+│     │  │     │     │     └─ cloud_firestore_plugin_c_api.h
+│     │  │     │     ├─ messages.g.cpp
+│     │  │     │     ├─ messages.g.h
+│     │  │     │     ├─ plugin_version.h.in
+│     │  │     │     └─ test
+│     │  │     │        └─ cloud_firestore_plugin_test.cpp
+│     │  │     ├─ firebase_core
+│     │  │     │  ├─ android
+│     │  │     │  │  ├─ gradle
+│     │  │     │  │  │  └─ wrapper
+│     │  │     │  │  │     └─ gradle-wrapper.properties
+│     │  │     │  │  ├─ gradle.properties
+│     │  │     │  │  └─ src
+│     │  │     │  │     └─ main
+│     │  │     │  │        ├─ AndroidManifest.xml
+│     │  │     │  │        └─ java
+│     │  │     │  │           └─ io
+│     │  │     │  │              └─ flutter
+│     │  │     │  │                 └─ plugins
+│     │  │     │  │                    └─ firebase
+│     │  │     │  │                       └─ core
+│     │  │     │  │                          ├─ FlutterFirebaseCorePlugin.java
+│     │  │     │  │                          ├─ FlutterFirebaseCoreRegistrar.java
+│     │  │     │  │                          ├─ FlutterFirebasePlugin.java
+│     │  │     │  │                          ├─ FlutterFirebasePluginRegistry.java
+│     │  │     │  │                          └─ GeneratedAndroidFirebaseCore.java
+│     │  │     │  ├─ CHANGELOG.md
+│     │  │     │  ├─ example
+│     │  │     │  │  ├─ analysis_options.yaml
+│     │  │     │  │  ├─ android
+│     │  │     │  │  │  ├─ app
+│     │  │     │  │  │  │  ├─ google-services.json
+│     │  │     │  │  │  │  └─ src
+│     │  │     │  │  │  │     ├─ debug
+│     │  │     │  │  │  │     │  └─ AndroidManifest.xml
+│     │  │     │  │  │  │     ├─ main
+│     │  │     │  │  │  │     │  ├─ AndroidManifest.xml
+│     │  │     │  │  │  │     │  ├─ java
+│     │  │     │  │  │  │     │  │  └─ io
+│     │  │     │  │  │  │     │  │     └─ flutter
+│     │  │     │  │  │  │     │  │        └─ plugins
+│     │  │     │  │  │  │     │  ├─ kotlin
+│     │  │     │  │  │  │     │  │  └─ io
+│     │  │     │  │  │  │     │  │     └─ flutter
+│     │  │     │  │  │  │     │  │        └─ plugins
+│     │  │     │  │  │  │     │  │           └─ firebasecoreexample
+│     │  │     │  │  │  │     │  │              └─ MainActivity.kt
+│     │  │     │  │  │  │     │  └─ res
+│     │  │     │  │  │  │     │     ├─ drawable
+│     │  │     │  │  │  │     │     │  └─ launch_background.xml
+│     │  │     │  │  │  │     │     ├─ drawable-v21
+│     │  │     │  │  │  │     │     │  └─ launch_background.xml
+│     │  │     │  │  │  │     │     ├─ mipmap-hdpi
+│     │  │     │  │  │  │     │     │  └─ ic_launcher.png
+│     │  │     │  │  │  │     │     ├─ mipmap-mdpi
+│     │  │     │  │  │  │     │     │  └─ ic_launcher.png
+│     │  │     │  │  │  │     │     ├─ mipmap-xhdpi
+│     │  │     │  │  │  │     │     │  └─ ic_launcher.png
+│     │  │     │  │  │  │     │     ├─ mipmap-xxhdpi
+│     │  │     │  │  │  │     │     │  └─ ic_launcher.png
+│     │  │     │  │  │  │     │     ├─ mipmap-xxxhdpi
+│     │  │     │  │  │  │     │     │  └─ ic_launcher.png
+│     │  │     │  │  │  │     │     ├─ values
+│     │  │     │  │  │  │     │     │  └─ styles.xml
+│     │  │     │  │  │  │     │     └─ values-night
+│     │  │     │  │  │  │     │        └─ styles.xml
+│     │  │     │  │  │  │     └─ profile
+│     │  │     │  │  │  │        └─ AndroidManifest.xml
+│     │  │     │  │  │  ├─ gradle
+│     │  │     │  │  │  │  └─ wrapper
+│     │  │     │  │  │  │     └─ gradle-wrapper.properties
+│     │  │     │  │  │  └─ gradle.properties
+│     │  │     │  │  ├─ ios
+│     │  │     │  │  │  ├─ Flutter
+│     │  │     │  │  │  │  ├─ AppFrameworkInfo.plist
+│     │  │     │  │  │  │  ├─ Debug.xcconfig
+│     │  │     │  │  │  │  └─ Release.xcconfig
+│     │  │     │  │  │  ├─ Podfile
+│     │  │     │  │  │  ├─ Runner
+│     │  │     │  │  │  │  ├─ AppDelegate.h
+│     │  │     │  │  │  │  ├─ AppDelegate.m
+│     │  │     │  │  │  │  ├─ Assets.xcassets
+│     │  │     │  │  │  │  │  └─ LaunchImage.imageset
+│     │  │     │  │  │  │  │     ├─ Contents.json
+│     │  │     │  │  │  │  │     ├─ LaunchImage.png
+│     │  │     │  │  │  │  │     ├─ LaunchImage@2x.png
+│     │  │     │  │  │  │  │     ├─ LaunchImage@3x.png
+│     │  │     │  │  │  │  │     └─ README.md
+│     │  │     │  │  │  │  ├─ Base.lproj
+│     │  │     │  │  │  │  │  ├─ LaunchScreen.storyboard
+│     │  │     │  │  │  │  │  └─ Main.storyboard
+│     │  │     │  │  │  │  ├─ Info.plist
+│     │  │     │  │  │  │  └─ main.m
+│     │  │     │  │  │  ├─ Runner.xcodeproj
+│     │  │     │  │  │  │  ├─ project.pbxproj
+│     │  │     │  │  │  │  ├─ project.xcworkspace
+│     │  │     │  │  │  │  │  ├─ contents.xcworkspacedata
+│     │  │     │  │  │  │  │  └─ xcshareddata
+│     │  │     │  │  │  │  │     └─ IDEWorkspaceChecks.plist
+│     │  │     │  │  │  │  └─ xcshareddata
+│     │  │     │  │  │  │     └─ xcschemes
+│     │  │     │  │  │  │        └─ Runner.xcscheme
+│     │  │     │  │  │  └─ Runner.xcworkspace
+│     │  │     │  │  │     ├─ contents.xcworkspacedata
+│     │  │     │  │  │     └─ xcshareddata
+│     │  │     │  │  │        └─ IDEWorkspaceChecks.plist
+│     │  │     │  │  ├─ lib
+│     │  │     │  │  │  ├─ firebase_options.dart
+│     │  │     │  │  │  └─ main.dart
+│     │  │     │  │  ├─ macos
+│     │  │     │  │  │  ├─ Flutter
+│     │  │     │  │  │  │  ├─ Flutter-Debug.xcconfig
+│     │  │     │  │  │  │  └─ Flutter-Release.xcconfig
+│     │  │     │  │  │  ├─ Podfile
+│     │  │     │  │  │  ├─ Runner
+│     │  │     │  │  │  │  ├─ AppDelegate.swift
+│     │  │     │  │  │  │  ├─ Assets.xcassets
+│     │  │     │  │  │  │  ├─ Base.lproj
+│     │  │     │  │  │  │  │  └─ MainMenu.xib
+│     │  │     │  │  │  │  ├─ Configs
+│     │  │     │  │  │  │  │  ├─ AppInfo.xcconfig
+│     │  │     │  │  │  │  │  ├─ Debug.xcconfig
+│     │  │     │  │  │  │  │  ├─ Release.xcconfig
+│     │  │     │  │  │  │  │  └─ Warnings.xcconfig
+│     │  │     │  │  │  │  ├─ DebugProfile.entitlements
+│     │  │     │  │  │  │  ├─ Info.plist
+│     │  │     │  │  │  │  ├─ MainFlutterWindow.swift
+│     │  │     │  │  │  │  └─ Release.entitlements
+│     │  │     │  │  │  ├─ Runner.xcodeproj
+│     │  │     │  │  │  │  ├─ project.pbxproj
+│     │  │     │  │  │  │  ├─ project.xcworkspace
+│     │  │     │  │  │  │  │  ├─ contents.xcworkspacedata
+│     │  │     │  │  │  │  │  └─ xcshareddata
+│     │  │     │  │  │  │  │     └─ IDEWorkspaceChecks.plist
+│     │  │     │  │  │  │  └─ xcshareddata
+│     │  │     │  │  │  │     └─ xcschemes
+│     │  │     │  │  │  │        └─ Runner.xcscheme
+│     │  │     │  │  │  └─ Runner.xcworkspace
+│     │  │     │  │  │     ├─ contents.xcworkspacedata
+│     │  │     │  │  │     └─ xcshareddata
+│     │  │     │  │  │        ├─ IDEWorkspaceChecks.plist
+│     │  │     │  │  │        └─ WorkspaceSettings.xcsettings
+│     │  │     │  │  ├─ pubspec.yaml
+│     │  │     │  │  ├─ README.md
+│     │  │     │  │  ├─ web
+│     │  │     │  │  │  ├─ favicon.png
+│     │  │     │  │  │  ├─ icons
+│     │  │     │  │  │  ├─ index.html
+│     │  │     │  │  │  └─ manifest.json
+│     │  │     │  │  └─ windows
+│     │  │     │  │     ├─ CMakeLists.txt
+│     │  │     │  │     ├─ flutter
+│     │  │     │  │     │  └─ CMakeLists.txt
+│     │  │     │  │     └─ runner
+│     │  │     │  │        ├─ CMakeLists.txt
+│     │  │     │  │        ├─ flutter_window.cpp
+│     │  │     │  │        ├─ flutter_window.h
+│     │  │     │  │        ├─ main.cpp
+│     │  │     │  │        ├─ resource.h
+│     │  │     │  │        ├─ resources
+│     │  │     │  │        │  └─ app_icon.ico
+│     │  │     │  │        ├─ runner.exe.manifest
+│     │  │     │  │        ├─ Runner.rc
+│     │  │     │  │        ├─ utils.cpp
+│     │  │     │  │        ├─ utils.h
+│     │  │     │  │        ├─ win32_window.cpp
+│     │  │     │  │        └─ win32_window.h
+│     │  │     │  ├─ ios
+│     │  │     │  │  ├─ firebase_core
+│     │  │     │  │  │  ├─ Package.swift
+│     │  │     │  │  │  └─ Sources
+│     │  │     │  │  │     └─ firebase_core
+│     │  │     │  │  │        ├─ dummy.m
+│     │  │     │  │  │        ├─ FLTFirebaseCorePlugin.m
+│     │  │     │  │  │        ├─ FLTFirebasePlugin.m
+│     │  │     │  │  │        ├─ FLTFirebasePluginRegistry.m
+│     │  │     │  │  │        ├─ include
+│     │  │     │  │  │        │  └─ firebase_core
+│     │  │     │  │  │        │     ├─ dummy.h
+│     │  │     │  │  │        │     ├─ FLTFirebaseCorePlugin.h
+│     │  │     │  │  │        │     ├─ FLTFirebasePlugin.h
+│     │  │     │  │  │        │     ├─ FLTFirebasePluginRegistry.h
+│     │  │     │  │  │        │     └─ messages.g.h
+│     │  │     │  │  │        ├─ messages.g.m
+│     │  │     │  │  │        └─ Resources
+│     │  │     │  │  ├─ firebase_core.podspec
+│     │  │     │  │  └─ firebase_sdk_version.rb
+│     │  │     │  ├─ lib
+│     │  │     │  │  ├─ firebase_core.dart
+│     │  │     │  │  └─ src
+│     │  │     │  │     ├─ firebase.dart
+│     │  │     │  │     ├─ firebase_app.dart
+│     │  │     │  │     └─ port_mapping.dart
+│     │  │     │  ├─ LICENSE
+│     │  │     │  ├─ macos
+│     │  │     │  │  ├─ firebase_core
+│     │  │     │  │  │  ├─ Package.swift
+│     │  │     │  │  │  └─ Sources
+│     │  │     │  │  │     └─ firebase_core
+│     │  │     │  │  │        ├─ dummy.m
+│     │  │     │  │  │        ├─ FLTFirebaseCorePlugin.m
+│     │  │     │  │  │        ├─ FLTFirebasePlugin.m
+│     │  │     │  │  │        ├─ FLTFirebasePluginRegistry.m
+│     │  │     │  │  │        ├─ include
+│     │  │     │  │  │        │  ├─ dummy.h
+│     │  │     │  │  │        │  └─ firebase_core
+│     │  │     │  │  │        │     ├─ FLTFirebaseCorePlugin.h
+│     │  │     │  │  │        │     ├─ FLTFirebasePlugin.h
+│     │  │     │  │  │        │     ├─ FLTFirebasePluginRegistry.h
+│     │  │     │  │  │        │     └─ messages.g.h
+│     │  │     │  │  │        ├─ messages.g.m
+│     │  │     │  │  │        └─ Resources
+│     │  │     │  │  └─ firebase_core.podspec
+│     │  │     │  ├─ pubspec.yaml
+│     │  │     │  ├─ README.md
+│     │  │     │  ├─ test
+│     │  │     │  │  └─ firebase_core_test.dart
+│     │  │     │  └─ windows
+│     │  │     │     ├─ CMakeLists.txt
+│     │  │     │     ├─ firebase_core_plugin.cpp
+│     │  │     │     ├─ firebase_core_plugin.h
+│     │  │     │     ├─ firebase_core_plugin_c_api.cpp
+│     │  │     │     ├─ include
+│     │  │     │     │  └─ firebase_core
+│     │  │     │     │     └─ firebase_core_plugin_c_api.h
+│     │  │     │     ├─ messages.g.cpp
+│     │  │     │     ├─ messages.g.h
+│     │  │     │     └─ plugin_version.h.in
 │     │  │     ├─ path_provider_windows
 │     │  │     │  ├─ AUTHORS
 │     │  │     │  ├─ CHANGELOG.md
