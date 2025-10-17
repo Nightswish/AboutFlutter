@@ -8,7 +8,7 @@ import 'core/theme/theme.dart' as app_theme;
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod
 import 'core/providers/theme_provider.dart';
 import 'package:portfolio/presentation/privacy_policy_page.dart'; // api 모델
-import 'package:portfolio/presentation/homepage.dart';
+// import 'package:portfolio/presentation/homepage.dart';
 import 'package:portfolio/presentation/web_main.dart';
 
 // 조건부 임포트: 웹일 때는 web_utils_web.dart, 아니면 web_utils_stub.dart
