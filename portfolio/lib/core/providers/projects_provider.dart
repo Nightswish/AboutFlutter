@@ -45,9 +45,7 @@ class ProjectsNotifier extends StateNotifier<AsyncValue<List<Project>>> {
 
       if (source == DataSource.rest) {
         // ✅ REST API
-        final response = await http.get(
-          Uri.parse("https://example.com/projects.json"),
-        );
+        final response = await http.get(Uri.parse("https://localhost.com/e/"));
         if (response.statusCode == 200) {
           final data = jsonDecode(response.body) as List;
           list = data.map((e) => Project.fromJson(e)).toList();
